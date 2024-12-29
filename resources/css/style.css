@@ -1,0 +1,26 @@
+/* Default styles for smaller screens */
+.navbar-nav {
+    gap: 0; 
+    display: flex;
+    align-items: center;
+}
+
+.navbar-toggler {
+    display: block;
+}
+
+.login-btn {
+    width: 100%; /* Make button full-width on smaller screens */
+}
+
+/* Media query for larger screens */
+@media (min-width: 640px) {
+    .navbar-nav {
+        gap: 4rem; /* Set larger gap on larger screens */
+    }
+
+    .login-btn {
+        width: auto; /* Button returns to its normal width on larger screens */
+    }
+    
+}

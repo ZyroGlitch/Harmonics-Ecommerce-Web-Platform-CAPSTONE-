@@ -1,3 +1,26 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* Default styles for small screens */
+.navbar-nav {
+    gap: 2rem;
+    /* Add gap between nav items */
+}
+
+/* Adjust font size on smaller screens */
+.navbar-nav .nav-link {
+    font-size: 1rem;
+}
+
+.navbar-toggler {
+    display: block;
+}
+
+/* Media query for larger screens */
+@media (min-width: 640px) {
+    .navbar-nav {
+        gap: 4rem;
+    }
+}
