@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import signup_img from '../../../public/assets/signUp1.svg';
-import logo from '../../../public/assets/logo.png';
-import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import { Link, useForm } from "@inertiajs/react";
+import { useRoute } from 'routes-ziggy';
+
 
 export default function Registration() {
+
+    const route = useRoute();
+
     // Toggle Show / Hide Password
     const [showPassword, setShowPassword] = useState(false);
 
@@ -24,10 +27,12 @@ export default function Registration() {
 
     function submit(e) {
         e.preventDefault();
-        post('/customers');
+        post(route('customer.register'));
     }
 
     // console.log(useForm()); to show all the useForm functions
+
+
 
     return (
         <section className="row justify-content-center align-items-center vh-100 bg-light m-0 p-0">
@@ -43,8 +48,7 @@ export default function Registration() {
                 <div className="text-center mb-4">
                     <h1 className="fw-bold">Get Started</h1>
                     <h6 className="fw-bold">
-                        Already have an account?{" "}
-                        <Link href="/customers/login" className="text-success" style={{ textDecoration: "none" }}>
+                        Already have an account? <Link href={route('customer.login')} className="text-success" style={{ textDecoration: "none" }}>
                             Sign In
                         </Link>
                     </h6>
@@ -158,3 +162,6 @@ export default function Registration() {
         </section>
     );
 }
+
+// Set this page with no default layout
+Registration.noLayout = true;

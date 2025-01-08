@@ -1,10 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import login_img from '../../../public/assets/loginpage.png';
 import logo from '../../../public/assets/logo.png';
 import { Link, useForm, usePage } from '@inertiajs/react';
-import Swal from 'sweetalert2';
+import { useRoute } from 'routes-ziggy';
 
 export default function Login() {
+    // Flash Message
+    const { flash } = usePage().props;
+    // console.log(usePage());
+
+    const route = useRoute();
+
     // Toggle Show / Hide Password
     const [showPassword, setShowPassword] = useState(false);
 
@@ -19,35 +25,26 @@ export default function Login() {
 
     function submit(e) {
         e.preventDefault();
-        post('/customers/authentication');
+        post(route('customer.authentication'));
     }
 
-    // Flash Message
-    const { flash } = usePage().props;
-    // console.log(usePage());
 
-    // Show SweetAlert when there's an error
-    useEffect(() => {
-        if (flash.error) {
-            // Show the SweetAlert popup
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: flash.error,
-                confirmButtonText: 'Ok',
-            }).then(() => {
-                // Reset the error after the SweetAlert closes
-                // This will allow the error to be shown again if set
-                setData('email', '');  // Reset the form or data if needed
-            });
-        }
-    }, [flash.error]); // This runs whenever flash.error changes
 
     return (
         <div style={{ backgroundColor: '#72BF78' }}>
             <div className='container'>
                 <div className="row justify-content-center align-items-center vh-100">
+
                     <div className="col-lg-10 col-md-10">
+                        {
+                            flash.error && (
+                                <div class="alert bg-danger text-light  alert-dismissible fade show" role="alert">
+                                    {flash.error}
+
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            )
+                        }
                         <div className="card shadow-lg border-0">
                             <div className="card-body row justify-content-center align-items-stretch p-0 m-0">
                                 <div className="col-lg-6 col-md-6 p-0">
@@ -63,37 +60,51 @@ export default function Login() {
 
                                     <form onSubmit={submit} className='text-start'>
                                         <div class="mb-3">
-                                            <label for="email" class="form-label fw-semibold">Email address</label>
+                                            <label for="email" className="form-label fw-semibold">Email address</label>
                                             <input
                                                 type="email"
-                                                class="form-control shadow-sm"
+                                                className={
+                                                    `form-control shadow-sm
+                                                        ${errors.password ? 'border border-danger' : 'mb-3'}`
+                                                }
                                                 id="email"
                                                 placeholder='Enter your email'
                                                 value={data.email}
                                                 onChange={(e) => setData('email', e.target.value)}
                                             />
+
+                                            {
+                                                errors.email && <p className="text-danger">{errors.email}</p>
+                                            }
                                         </div>
 
-                                        <div class="mb-3">
-                                            <label for="password" class="form-label fw-semibold">Password</label>
+
+                                        <div className="mb-3">
+                                            <label for="password" className="form-label fw-semibold">Password</label>
                                             <input
-                                                type={showPassword ? "text" : "password"} class="form-control shadow-sm"
+                                                type={showPassword ? "text" : "password"} className={
+                                                    `form-control shadow-sm 
+                                                        ${errors.password ? 'border border-danger' : 'mb-3'}`
+                                                }
                                                 id="password"
                                                 placeholder='Enter your password'
                                                 value={data.password}
                                                 onChange={(e) => setData('password', e.target.value)}
                                             />
+                                            {
+                                                errors.password && <p className="text-danger">{errors.password}</p>
+                                            }
                                         </div>
 
-                                        <div class="form-check mb-4">
+                                        <div className="form-check mb-4">
                                             <input
-                                                class="form-check-input shadow-sm"
+                                                className="form-check-input shadow-sm"
                                                 type="checkbox"
                                                 value=""
                                                 id="flexCheckDefault"
                                                 onClick={togglePassword}
                                             />
-                                            <label class="form-check-label" for="flexCheckDefault">
+                                            <label className="form-check-label" for="flexCheckDefault">
                                                 Show password
                                             </label>
                                         </div>
@@ -103,10 +114,14 @@ export default function Login() {
                                         </div>
                                     </form>
 
-                                    <div className="d-flex justify-content-center align-items-center gap-2">
+                                    <div className="d-flex justify-content-center align-items-center gap-2 mb-2">
                                         <p className='m-0'>Don't have an account? </p>
-                                        <Link href="/customers/create" className='text-dark fw-semibold' style={{ textDecoration: 'none' }}>Sign up</Link>
+                                        <Link href={route('customer.formRegistration')} className='text-dark fw-semibold' style={{ textDecoration: 'none' }}>Sign up</Link>
                                     </div>
+
+                                    {/* {
+                                        flash.error && (<p className='text-danger fw-semibold'>{flash.error}</p>)
+                                    } */}
                                 </div>
                             </div>
                         </div>
@@ -117,3 +132,7 @@ export default function Login() {
         </div>
     );
 }
+
+
+// Set this page with no default layout
+Login.noLayout = true;

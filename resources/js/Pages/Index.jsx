@@ -7,16 +7,19 @@ import about from '../../../public/assets/about.jpg';
 import mission from '../../../public/assets/mission.jpg';
 import { FaPhone, FaLocationDot, FaSquareFacebook } from "react-icons/fa6";
 import { Link } from '@inertiajs/react';
+import { useRoute } from 'routes-ziggy';
 
 export default function Index() {
+    const route = useRoute();
+
     return (
         <>
             <nav class="navbar navbar-expand-lg bg-light shadow-sm fixed-top">
                 <div class="container-fluid">
-                    <a class="navbar-brand fw-bold" href="#">
+                    <Link class="navbar-brand fw-bold" href="#">
                         <img src={logo} alt="Logo" className='object-fit-contain rounded-pill me-2' style={{ width: '40px', height: '40px' }} />
                         Harmonics
-                    </a>
+                    </Link>
 
                     {/* Responsive Humburger Menu */}
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,7 +43,7 @@ export default function Index() {
                             </li>
                         </ul>
 
-                        <Link href="/customers/create" type='button' className="btn btn-outline-dark login-btn">LOGIN</Link>
+                        <Link href={route('customer.login')} type='button' className="btn btn-outline-dark login-btn">LOGIN</Link>
                     </div>
                 </div>
             </nav>
@@ -542,3 +545,6 @@ export default function Index() {
         </>
     );
 }
+
+// Set this page with no default layout
+Index.noLayout = true;

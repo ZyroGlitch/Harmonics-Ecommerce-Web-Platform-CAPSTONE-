@@ -1,6 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+body {
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+
 /* Default styles for smaller screens */
 .navbar-nav {
-    gap: 0; 
+    gap: 0;
     display: flex;
     align-items: center;
 }
@@ -10,17 +17,28 @@
 }
 
 .login-btn {
-    width: 100%; /* Make button full-width on smaller screens */
+    width: 100%;
+    /* Make button full-width on smaller screens */
 }
 
 /* Media query for larger screens */
 @media (min-width: 640px) {
     .navbar-nav {
-        gap: 4rem; /* Set larger gap on larger screens */
+        gap: 4rem;
+        /* Set larger gap on larger screens */
     }
 
     .login-btn {
-        width: auto; /* Button returns to its normal width on larger screens */
+        width: auto;
+        /* Button returns to its normal width on larger screens */
     }
-    
+
+}
+
+.grid-product {
+    display: grid;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }

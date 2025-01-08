@@ -10,4 +10,10 @@ export default defineConfig({
         }),
         react(),
     ],
+    resolve: {
+        alias: {
+            '@': '/resources/js',
+            'routes-ziggy': '../../../vendor/tightenco/ziggy',
+        },
+    },
 });

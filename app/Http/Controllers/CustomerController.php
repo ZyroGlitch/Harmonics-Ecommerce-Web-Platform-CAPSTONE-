@@ -16,7 +16,7 @@ class CustomerController extends Controller
      */
     public function index()
     {
-         return inertia('Index');
+        return inertia('Index');
     }
 
     public function login()
@@ -24,40 +24,36 @@ class CustomerController extends Controller
         return inertia('Login');
     }
 
-    public function authentication(Request $request){
-        //  $user = User::where('email',$this->email)->first();
+    public function formRegistration(){
+        return inertia('Registration');
+    }
 
-        // if($user && Hash::check($this->password, $user->password)){
-        //     Session::put('userID',$user->userID);
+    public function authentication(Request $request) 
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string|min:8'
+        ]);
 
-        //     switch($user->role){
-        //         case 'Customer':
-        //             $this->redirectRoute('customer-login.dashboard');
-        //             break;
-
-        //         case 'Admin':
-        //             $this->redirectRoute('admin.admin-dashboard');
-        //             break;
-        //     }
-
-        // }else{
-        //     session()->flash('error','Incorrect Username or Password!');
-
-        //     $this->redirectRoute('customer.login');
-        // }
-
+        // Fetch user data
         $user = Customer::where('email', $request->email)->first();
 
-        if($user && Hash::check($request->password, $user->password)){
-            Session::put('userID',$user->id);
+        if ($user && Hash::check($request->password, $user->password)) {
+            // Store user ID in session
+            Session::put('userID', $user->userID);
 
-            return redirect()->route('customers.dashboard');
-        }else{
-            return redirect()->route('customers.login')->with('error', 'Incorrect Username or Password!');
-
-            session()->forget('error');
+            // Redirect to the appropriate dashboard
+            return redirect("/product");
+        } else {
+            // Redirect back to login with error message
+            return redirect()->route('customer.login')->with('error', 'Incorrect Username or Password!');
         }
     }
+
+    public function dashboard(){
+        return inertia('Dashboard');
+    }
+
     
     public function create()
     {
@@ -67,7 +63,7 @@ class CustomerController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function register(Request $request)
     {
         $fields = $request->validate([
             'firstname' => 'required|max:50',
@@ -90,9 +86,28 @@ class CustomerController extends Controller
         $fields['password'] = Hash::make($fields['password']);
 
         // Create the new customer
-        Customer::create($fields);
+        $stored = Customer::create($fields);
 
-        return redirect()->route('customers.create')->with('message', 'Account created successfully');
+        if($stored){
+            $user = Customer::where('email',$request->email)->first();
+
+            // Store user ID in session
+            Session::put('userID', $user->userID);
+
+            // Redirect to the appropriate dashboard
+            return redirect("/product");
+        }else{
+            dd('Error');
+        }
+    }
+
+    public function product()
+    {
+        return inertia('Dashboard');
+    }
+
+    public function order(){
+        return inertia('Order');
     }
 
     /**
