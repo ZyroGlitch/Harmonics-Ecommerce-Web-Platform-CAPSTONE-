@@ -1,16 +1,19 @@
-import { Link } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import React from 'react';
 import logo from '../../../public/assets/logo.png';
 import profile from '../../../public/assets/profile.jpg';
 import { HiBell } from "react-icons/hi2";
 import { FaCartShopping } from "react-icons/fa6";
 import { useRoute } from 'routes-ziggy';
+import Title_MetaTagsLayout from './Title_MetaTagsLayout';
 
 export default function AuthenticatedLayout({ children }) {
     const route = useRoute();
 
     return (
         <>
+            <Title_MetaTagsLayout />
+
             <nav className="navbar navbar-expand-lg bg-light shadow-sm fixed-top">
                 <div className="container-fluid">
                     <a className="navbar-brand fw-bold" href="#">

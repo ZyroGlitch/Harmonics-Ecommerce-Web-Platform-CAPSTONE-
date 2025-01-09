@@ -8,10 +8,12 @@ import { createRoot } from 'react-dom/client'
 import 'bootstrap/dist/css/bootstrap.min.css';
 // Import Bootstrap JS (optional for dynamic components like modals)
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import CustomerLayout from './Layouts/CustomerLayout';
+import Title_MetaTagsLayout from './Layouts/Title_MetaTagsLayout';
+
+import 'rsuite/dist/rsuite.min.css';
 
 createInertiaApp({
-    title: title => "Harmonics",
+    // title: title => "Harmonics",
     resolve: name => {
         const pages = import.meta.glob('./Pages/**/*.jsx', { eager: true })
 
@@ -19,8 +21,10 @@ createInertiaApp({
         let page = pages[`./Pages/${name}.jsx`];
 
         // Check if the page explicitly declares `noLayout` property
-        if (!page.default.noLayout) {
-            page.default.layout = page.default.layout || ((page) => <CustomerLayout children={page} />);
+        if (page.default.noLayout) {
+            page.default.layout = page.default.layout || ((page) => (
+                <Title_MetaTagsLayout children={page} />
+            ));
         }
 
         return page;

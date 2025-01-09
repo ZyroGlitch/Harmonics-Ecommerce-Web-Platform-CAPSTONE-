@@ -2,18 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Customer;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rules\Password;
 
 
-class CustomerController extends Controller
+class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         return inertia('Index');
@@ -36,14 +33,22 @@ class CustomerController extends Controller
         ]);
 
         // Fetch user data
-        $user = Customer::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)->first();
 
         if ($user && Hash::check($request->password, $user->password)) {
             // Store user ID in session
             Session::put('userID', $user->userID);
 
-            // Redirect to the appropriate dashboard
-            return redirect("/product");
+            switch($user->role){
+                case 'Customer':
+                    return redirect()->route('customer.product');
+                    break;
+
+                case 'Admin':
+                    return redirect()->route('admin.dashboard');
+                    break;
+            }
+
         } else {
             // Redirect back to login with error message
             return redirect()->route('customer.login')->with('error', 'Incorrect Username or Password!');
@@ -70,7 +75,7 @@ class CustomerController extends Controller
             'lastname' => 'required|max:50',
             'phone' => 'required|min:11|max:11',
             'address' => 'required',
-            'email' => 'required|email|unique:customers,email',
+            'email' => 'required|email|unique:users,email',
             'password' => [
                 'required',
                 'string',
@@ -86,10 +91,10 @@ class CustomerController extends Controller
         $fields['password'] = Hash::make($fields['password']);
 
         // Create the new customer
-        $stored = Customer::create($fields);
+        $stored = User::create($fields);
 
         if($stored){
-            $user = Customer::where('email',$request->email)->first();
+            $user = User::where('email',$fields['email'])->first();
 
             // Store user ID in session
             Session::put('userID', $user->userID);
@@ -110,35 +115,4 @@ class CustomerController extends Controller
         return inertia('Order');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Customer $customer)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Customer $customer)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Customer $customer)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Customer $customer)
-    {
-        //
-    }
 }

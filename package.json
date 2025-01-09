@@ -19,9 +19,11 @@
         "@inertiajs/react": "^2.0.0",
         "bootstrap": "^5.3.3",
         "bootstrap-icons": "^1.11.3",
-        "react": "^19.0.0",
-        "react-dom": "^19.0.0",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
+        "react-helmet-async": "^2.0.5",
         "react-icons": "^5.4.0",
+        "rsuite": "^5.76.2",
         "sweetalert2": "^11.15.5"
     }
 }

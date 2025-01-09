@@ -1,20 +1,41 @@
 <?php
 
+use App\Http\Controllers\AdminController;
+use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\CustomerMiddleware;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\UserController;
+
 
 //Get Routes
-Route::get('/', [CustomerController::class, 'index'])->name('customer.landingPage');
+Route::get('/', [UserController::class, 'index'])->name('customer.landingPage');
 
-Route::get('/login',[CustomerController::class, 'login'])->name('customer.login');
+Route::get('/login',[UserController::class, 'login'])->name('customer.login');
 
-Route::get('/formRegistration',[CustomerController::class, 'formRegistration'])->name('customer.formRegistration');
-
-Route::get('/product',[CustomerController::class, 'product'])->name('customer.product');
-
-Route::get('/order',[CustomerController::class, 'order'])->name('customer.order');
+Route::get('/formRegistration',[UserController::class, 'formRegistration'])->name('customer.formRegistration');
 
 //Post Routes
-Route::post('/register',[CustomerController::class, 'register'])->name('customer.register');
+Route::post('/register',[UserController::class, 'register'])->name('customer.register');
 
-Route::post('/authentication',[CustomerController::class, 'authentication'])->name('customer.authentication');
+Route::post('/authentication',[UserController::class, 'authentication'])->name('customer.authentication');
+
+
+// MIDDLEWARE ROUTES
+
+// Customer Route
+Route::middleware(CustomerMiddleware::class)->group(function(){
+    Route::get('/product',[UserController::class, 'product'])->name('customer.product');
+
+    Route::get('/order',[UserController::class, 'order'])->name('customer.order');
+});
+
+
+// Admin Route
+Route::middleware(AdminMiddleware::class)->group(function(){
+    Route::get('/admin',[AdminController::class,'dashboard'])->name('admin.dashboard');
+});
+
+
+
+
+;
