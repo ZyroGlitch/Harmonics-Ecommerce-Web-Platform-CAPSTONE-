@@ -1,7 +1,12 @@
-export default function Dashboard() {
+import AdminLayout from '../../Layouts/AdminLayout';
+
+function Dashboard() {
     return (
-        <div>
-            <h1>Admin Page</h1>
-        </div>
-    )
+        <>
+            <h1>Dashboard Content</h1>
+        </>
+    );
 }
+
+Dashboard.layout = page => <AdminLayout children={page} />
+export default Dashboard
