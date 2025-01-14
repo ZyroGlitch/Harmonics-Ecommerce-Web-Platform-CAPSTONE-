@@ -10,6 +10,7 @@ export default function AdminLayout({ children }) {
     return (
         <div className="d-flex h-100">
             {/* Sidebar */}
+
             <div className="shadow vh-100" style={{ width: 240 }}>
                 <Sidenav defaultOpenKeys={['3', '4']} style={{ backgroundColor: 'white' }}>
                     <Sidenav.Header>
@@ -20,20 +21,40 @@ export default function AdminLayout({ children }) {
                     </Sidenav.Header>
                     <Sidenav.Body style={{ backgroundColor: 'white' }}>
                         <Nav>
-                            {[
-                                { icon: <FaDiceD6 />, label: "Dashboard", href: route('admin.dashboard') },
-                                { icon: <FaCartShopping />, label: "Orders", href: route('admin.orders') },
-                                { icon: <FaBagShopping />, label: "Product", href: route('admin.adminProduct') },
-                                { icon: <FaChartLine />, label: "Sales Report", href: route('admin.salesReport') },
-                                { icon: <FaUsers />, label: "Users", href: route('admin.users') },
-                                { icon: <FaCommentDots />, label: "Messages", href: route('admin.messages') },
-                                { icon: <FaArrowRightFromBracket />, label: "Signout", href: route('admin.signout') },
-                            ].map(({ icon, label, href }, index) => (
-                                <Link key={index} href={href} className="d-flex align-items-center p-3 text-dark" style={{ textDecoration: 'none' }}>
-                                    {icon}
-                                    <h6 className="fw-semibold ms-3">{label}</h6>
-                                </Link>
-                            ))}
+                            <Link href={route('admin.dashboard')} className="d-flex align-items-center m-2 p-2 rounded side-navigation" style={{ textDecoration: 'none' }}>
+                                <FaDiceD6 />
+                                <h6 className="fw-semibold ms-3">Dashboard</h6>
+                            </Link>
+
+                            <Link href={route('admin.orders')} className="d-flex align-items-center m-2 p-2 rounded side-navigation" style={{ textDecoration: 'none' }}>
+                                <FaCartShopping />
+                                <h6 className="fw-semibold ms-3">Orders</h6>
+                            </Link>
+
+                            <Link href={route('admin.adminProduct')} className="d-flex align-items-center m-2 p-2 rounded side-navigation" style={{ textDecoration: 'none' }}>
+                                <FaBagShopping />
+                                <h6 className="fw-semibold ms-3">Product</h6>
+                            </Link>
+
+                            <Link href={route('admin.salesReport')} className="d-flex align-items-center m-2 p-2 rounded side-navigation" style={{ textDecoration: 'none' }}>
+                                <FaChartLine />
+                                <h6 className="fw-semibold ms-3">Sales Report</h6>
+                            </Link>
+
+                            <Link href={route('admin.users')} className="d-flex align-items-center m-2 p-2 rounded side-navigation" style={{ textDecoration: 'none' }}>
+                                <FaUsers />
+                                <h6 className="fw-semibold ms-3">Users</h6>
+                            </Link>
+
+                            <Link href={route('admin.messages')} className="d-flex align-items-center m-2 p-2 rounded side-navigation" style={{ textDecoration: 'none' }}>
+                                <FaCommentDots />
+                                <h6 className="fw-semibold ms-3">Messages</h6>
+                            </Link>
+
+                            <Link href={route('admin.signout')} className="d-flex align-items-center m-2 p-2 rounded side-navigation" style={{ textDecoration: 'none' }}>
+                                <FaArrowRightFromBracket />
+                                <h6 className="fw-semibold ms-3">Signout</h6>
+                            </Link>
                         </Nav>
                     </Sidenav.Body>
                 </Sidenav>

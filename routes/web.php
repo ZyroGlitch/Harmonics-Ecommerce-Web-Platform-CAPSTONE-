@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ProductController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\CustomerMiddleware;
 use Illuminate\Support\Facades\Route;
@@ -37,8 +38,9 @@ Route::middleware(CustomerMiddleware::class)->group(function(){
 });
 
 
-// Admin Route
 Route::middleware(AdminMiddleware::class)->group(function(){
+
+    // Admin Route
     Route::get('/dashboard',[AdminController::class,'dashboard'])
     ->name('admin.dashboard');
 
@@ -59,6 +61,10 @@ Route::middleware(AdminMiddleware::class)->group(function(){
 
     Route::get('/signout',[AdminController::class,'signout'])
     ->name('admin.signout');
+
+    // Product Route
+    Route::post('/product_upload',[ProductController::class,'productUpload'])
+    ->name('admin.productUpload');
 });
 
 
