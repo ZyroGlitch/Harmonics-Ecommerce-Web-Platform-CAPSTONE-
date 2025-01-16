@@ -35,6 +35,9 @@ Route::middleware(CustomerMiddleware::class)->group(function(){
 
     Route::get('/order',[UserController::class, 'order'])
     ->name('customer.order');
+
+    Route::get('/showProduct/{product:productID}', [UserController::class, 'showProduct'])
+    ->name('customer.showProduct');
 });
 
 
@@ -65,6 +68,9 @@ Route::middleware(AdminMiddleware::class)->group(function(){
     // Product Route
     Route::post('/product_upload',[ProductController::class,'productUpload'])
     ->name('admin.productUpload');
+
+    Route::get('/signout',[ProductController::class,'signout'])
+    ->name('admin.signout');
 });
 
 

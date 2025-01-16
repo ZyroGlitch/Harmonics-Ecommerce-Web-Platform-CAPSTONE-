@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
@@ -108,11 +109,19 @@ class UserController extends Controller
 
     public function product()
     {
-        return inertia('Dashboard');
+        $data = Product::all();
+        return inertia('Dashboard',['products' => $data]);
     }
 
     public function order(){
         return inertia('Order');
+    }
+
+    public function showProduct(Product $product){
+        // dd($product->productID);
+
+        $data = Product::where('productID', $product)->get();
+        return inertia('ShowProduct', ['products' => $data]);
     }
 
 }

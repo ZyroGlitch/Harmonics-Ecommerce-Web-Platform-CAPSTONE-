@@ -1,51 +1,63 @@
 import AdminLayout from '../../Layouts/AdminLayout';
 import { router, useForm } from '@inertiajs/react';
 import { useRoute } from '../../../../vendor/tightenco/ziggy';
+import { useState } from 'react';
 
 function Product() {
     const route = useRoute();
 
+    // State for image preview
+    const [imagePreview, setImagePreview] = useState(null);
+
     // Inertia Form Helper
     const { data, setData, post, processing, errors } = useForm({
         name: null,
+        category: null,
         price: null,
         stock: null,
         description: null,
         image: null,
     });
 
-    // const setImageValue = (e) => {
-    //     setData('image', e.target.files[0]); // Correctly set file input using `setData`
-    // };
-
-    // const submit = (e) => {
-    //     e.preventDefault();
-    //     post(route('admin.productUpload'), {
-    //         //     // Specify options for multipart form submission
-    //         //     forceFormData: true,
-    //         //     onSuccess: () => {
-    //         //         console.log('Product uploaded successfully!');
-    //         //     },
-    //         //     onError: (error) => {
-    //         //         console.error('Failed to upload product:', error);
-    //         //     },
-    //         // });
-    //     };
+    // Handle file selection and set image preview
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        setData('image', file); // Set the file to the Inertia form
+        if (file) {
+            setImagePreview(URL.createObjectURL(file)); // Generate preview URL
+        } else {
+            setImagePreview(null); // Reset preview if no file is selected
+        }
+    };
 
     function submit(e) {
         e.preventDefault();
+
+        // Submit the form data to the backend
         post(route('admin.productUpload'));
+
+        // Reset the form fields
+        // setData('name', null);
+        // setData('category', null);
+        // setData('price', null);
+        // setData('name', null);
+        // setData('stock', null);
+        // setData('image', null);
     }
 
+
     return (
-        <div className="h-100">
+        <div className="h-100 p-3" style={{ maxHeight: '500px', overflowY: 'auto', overflowX: 'hidden' }}>
             <h3 className="mb-3">Product Page</h3>
 
             <form onSubmit={submit}>
                 <div className="row justify-content-between">
                     <div className="col-lg-7 col-md-7">
                         <div className="card rounded shadow border-0">
+                            {/* <div className='px-3' style={{ maxHeight: '450px', overflowY: 'auto', overflowX: 'hidden' }}> */}
                             <div className="card-body">
+
+                                {/* Other form fields */}
                                 <div className="mb-3">
                                     <label htmlFor="name" className="form-label fw-semibold">
                                         Product Name
@@ -90,6 +102,25 @@ function Product() {
                                     </div>
                                 </div>
 
+                                <div className="mb-3">
+                                    <label htmlFor="category" className="form-label fw-semibold">
+                                        Category
+                                    </label>
+                                    <select class="form-select shadow-sm" id='category'
+                                        value={data.category}
+                                        onChange={(e) => { setData('category', e.target.value) }}
+                                    >
+                                        <option selected>Select product category</option>
+                                        <option value="Music">Music</option>
+                                        <option value="Sports">Sports</option>
+                                        <option value="Fitness">Fitness</option>
+                                    </select>
+
+                                    {
+                                        errors.category && <div className="text-danger">{errors.category}</div>
+                                    }
+                                </div>
+
                                 <div className="mb-4">
                                     <label htmlFor="description" className="form-label fw-semibold">
                                         Product Description
@@ -113,6 +144,7 @@ function Product() {
                                 </div>
                             </div>
                         </div>
+                        {/* </div> */}
                     </div>
                     <div className="col-lg-5 col-md-5">
                         <div className="card shadow rounded">
@@ -120,14 +152,29 @@ function Product() {
                                 <label htmlFor="file" className="form-label fw-semibold">
                                     Upload Product Image
                                 </label>
+
+                                {/* Image Preview */}
+                                {imagePreview && (
+                                    <div className="text-center mb-3">
+                                        <img
+                                            src={imagePreview}
+                                            alt="Preview Image"
+                                            className="object-fit-cover rounded"
+                                            style={{ width: '200px', height: '200px' }}
+                                        />
+                                    </div>
+                                )}
+
                                 <input
                                     type="file"
-                                    className='form-control'
-                                    onChange={e => setData('image', e.target.files[0])}
+                                    className="form-control"
+                                    onChange={handleImageChange}
                                 />
                                 {errors.image && (
                                     <div className="text-danger">{errors.image}</div>
                                 )}
+
+
                             </div>
                         </div>
                     </div>
