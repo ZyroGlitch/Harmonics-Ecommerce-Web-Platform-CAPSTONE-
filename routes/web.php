@@ -36,8 +36,11 @@ Route::middleware(CustomerMiddleware::class)->group(function(){
     Route::get('/order',[UserController::class, 'order'])
     ->name('customer.order');
 
-    Route::get('/showProduct/{product:productID}', [UserController::class, 'showProduct'])
+    Route::get('/showProduct/{productID}', [UserController::class, 'showProduct'])
     ->name('customer.showProduct');
+
+    Route::post('/buyProduct/{productID}', [UserController::class, 'buyProduct'])
+    ->name('customer.buyProduct');
 });
 
 

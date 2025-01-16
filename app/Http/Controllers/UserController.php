@@ -117,11 +117,23 @@ class UserController extends Controller
         return inertia('Order');
     }
 
-    public function showProduct(Product $product){
+    public function showProduct($productID){
         // dd($product->productID);
 
-        $data = Product::where('productID', $product)->get();
-        return inertia('ShowProduct', ['products' => $data]);
+        $product = Product::where('productID', $productID)->first();
+        return inertia('ShowProduct', ['show_product' => $product]);
+    }
+
+    public function buyProduct(Request $request){
+        $field = $request->validate([
+            'productID' => 'required|integer',
+            'price' => 'required|integer',
+            'quantity' => 'required|integer|min:1',
+        ]);
+
+        
+        
+        
     }
 
 }

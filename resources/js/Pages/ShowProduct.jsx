@@ -1,33 +1,62 @@
 import React from 'react'
 import AuthenticatedLayout from '../Layouts/AuthenticatedLayout'
 import { FaStar } from "react-icons/fa6";
-import { Link } from '@inertiajs/react';
+import { Link, useForm } from '@inertiajs/react';
 import { useRoute } from 'routes-ziggy';
 
-function ShowProduct({ products }) {
+function ShowProduct({ show_product }) {
 
     const route = useRoute();
 
-    console.log(products);
+    // console.log(show_product);
+
+    const { data, setData, post, processing } = useForm({
+        productID: show_product.productID,
+        price: show_product.price,
+        quantity: 1,
+    });
+
+
+    function submit(e) {
+        e.preventDefault();
+        post(route('customer.buyProduct'));
+    }
+
 
     return (
         <div className='container h-100 py-5'>
-            {products.map((product) => (
-                <div className="row justify-content-center">
-                    <div className="col-lg-7 col-md-7">
-                        <img src={"storage/" + product.image} alt="image" className="object-fit-cover" style={{ width: '400px', height: '400px' }} />
+            <form onSubmit={submit}>
+                <div className="row justify-content-center align-items-center">
+                    <div className="col-lg-6 col-md-6 text-center">
+                        <img
+                            src={"/storage/" + show_product.image}
+                            alt="image"
+                            className="object-fit-contain"
+                            style={{ width: '350px', height: '350px' }}
+                        />
                     </div>
-                    <div className="col-lg-5 col-md-5">
+                    <div className="col-lg-6 col-md-6">
                         <nav aria-label="breadcrumb mb-3">
                             <ol class="breadcrumb">
-                                <Link href={route('customer.product')} class="breadcrumb-item fw-semibold"><a href="#">Home</a></Link>
-                                <Link class="breadcrumb-item fw-semibold active" aria-current="page">Library</Link>
+                                <li class="breadcrumb-item fw-semibold">
+                                    <Link
+                                        href={route('customer.product')}
+                                        className='text-dark'
+                                        style={{ textDecoration: 'none' }}
+                                    >Back
+                                    </Link>
+                                </li>
+
+                                <li class="breadcrumb-item fw-semibold active" aria-current="page">{show_product.name}
+                                </li>
                             </ol>
                         </nav>
 
-                        <h2>Product Name</h2>
+                        <h2>{show_product.name}</h2>
                         <div className="d-flex justify-content-between align-items-center mb-3">
-                            <h4>₱2000</h4>
+                            <h4>
+                                ₱{show_product.price}
+                            </h4>
 
                             <div className="d-flex gap-1 align-items-center">
                                 <FaStar className='fs-6 text-warning' />
@@ -40,17 +69,31 @@ function ShowProduct({ products }) {
                             </div>
                         </div>
 
-                        <p className='mb-4' style={{ textAlign: 'justify' }}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa minima tenetur, harum facere impedit quae dolorum reprehenderit. Fugit molestias, ad fuga ipsa recusandae perferendis debitis qui vel odio earum autem?</p>
+                        <p className='mb-4' style={{ textAlign: 'justify' }}>
+                            {show_product.description}
+                        </p>
 
-                        <div className="mb-4">
+                        <div className="mb-5">
                             <label htmlFor="quantity" className="form-label fw-semibold">Quantity</label>
-                            <input type="number" className="form-control shadow-sm" style={{ width: '50%' }} />
+                            <input
+                                type="number"
+                                className="form-control shadow-sm"
+                                style={{ width: '50%' }}
+                                value={data.quantity}
+                                onChange={(e) => { setData('quantity', e.target.value) }}
+                                min={1}
+                            />
                         </div>
 
                         <div className="row align-items-center">
                             <div className="col-lg-6 col-md-6">
                                 <div className="d-grid">
-                                    <button className="btn btn-primary rounded-pill shadow">BUY</button>
+                                    <button
+                                        type='submit'
+                                        href={route('customer.buyProduct', show_product.productID)} className="btn btn-primary rounded-pill shadow"
+                                        disabled={processing}
+                                    >BUY
+                                    </button>
                                 </div>
                             </div>
                             <div className="col-lg-6 col-md-6">
@@ -61,7 +104,7 @@ function ShowProduct({ products }) {
                         </div>
                     </div>
                 </div>
-            ))}
+            </form>
         </div>
     )
 }
