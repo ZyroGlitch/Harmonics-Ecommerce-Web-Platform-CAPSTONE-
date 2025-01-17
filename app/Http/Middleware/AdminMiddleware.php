@@ -17,15 +17,12 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $userID = Session::get('userID');
-
-        $user = User::where('userID',$userID)->first();
-
+        $user = $request->user();
+        
         // dd($user->role);
         switch($user->role){
             case 'Admin':
                 return $next($request);
-                break;
             default:
                 // Return forbidden if role isn't admin
                 abort(403);

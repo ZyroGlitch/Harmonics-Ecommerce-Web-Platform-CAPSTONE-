@@ -28,32 +28,47 @@ class UserController extends Controller
 
     public function authentication(Request $request) 
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string|min:8'
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
         ]);
-
-        // Fetch user data
-        $user = User::where('email', $request->email)->first();
-
-        if ($user && Hash::check($request->password, $user->password)) {
-            // Store user ID in session
-            Session::put('userID', $user->userID);
-
-            switch($user->role){
-                case 'Customer':
-                    return redirect()->route('customer.product');
-                    break;
-
-                case 'Admin':
-                    return redirect()->route('admin.dashboard');
-                    break;
-            }
-
-        } else {
-            // Redirect back to login with error message
-            return redirect()->route('customer.login')->with('error', 'Incorrect Username or Password!');
+ 
+        if (auth()->attempt($credentials)) {
+            $request->session()->regenerate();
+ 
+            return redirect()->intended('dashboard');
         }
+ 
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ])->onlyInput('email');
+        
+        // $request->validate([
+        //     'email' => 'required|email',
+        //     'password' => 'required|string|min:8'
+        // ]);
+
+        // // Fetch user data
+        // $user = User::where('email', $request->email)->first();
+
+        // if ($user && Hash::check($request->password, $user->password)) {
+        //     // Store user ID in session
+        //     Session::put('id', $user->id);
+
+        //     switch($user->role){
+        //         case 'Customer':
+        //             return redirect()->route('customer.product');
+        //             break;
+
+        //         case 'Admin':
+        //             return redirect()->route('admin.dashboard');
+        //             break;
+        //     }
+
+        // } else {
+        //     // Redirect back to login with error message
+        //     return redirect()->route('customer.login')->with('error', 'Incorrect Username or Password!');
+        // }
     }
 
     public function dashboard(){
@@ -98,7 +113,7 @@ class UserController extends Controller
             $user = User::where('email',$fields['email'])->first();
 
             // Store user ID in session
-            Session::put('userID', $user->userID);
+            Session::put('id', $user->id);
 
             // Redirect to the appropriate dashboard
             return redirect("/product");

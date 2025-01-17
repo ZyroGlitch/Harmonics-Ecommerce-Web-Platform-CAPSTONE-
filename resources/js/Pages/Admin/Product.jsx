@@ -10,13 +10,13 @@ function Product() {
     const [imagePreview, setImagePreview] = useState(null);
 
     // Inertia Form Helper
-    const { data, setData, post, processing, errors } = useForm({
-        name: null,
-        category: null,
-        price: null,
-        stock: null,
-        description: null,
-        image: null,
+    const { data, setData, post, processing, errors, reset } = useForm({
+        name: '',
+        category: '',
+        price: '',
+        stock: '',
+        description: '',
+        image: '',
     });
 
     // Handle file selection and set image preview
@@ -34,15 +34,11 @@ function Product() {
         e.preventDefault();
 
         // Submit the form data to the backend
-        post(route('admin.productUpload'));
-
-        // Reset the form fields
-        // setData('name', null);
-        // setData('category', null);
-        // setData('price', null);
-        // setData('name', null);
-        // setData('stock', null);
-        // setData('image', null);
+        post(route('admin.productUpload'), {
+            onSuccess() {
+                reset();
+            }
+        });
     }
 
 

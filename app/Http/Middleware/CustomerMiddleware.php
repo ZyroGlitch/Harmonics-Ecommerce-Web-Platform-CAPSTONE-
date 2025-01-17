@@ -17,9 +17,7 @@ class CustomerMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $userID = Session::get('userID');
-
-        $user = User::where('userID',$userID)->first();
+        $user = $request->user();
 
         // dd($user->role);
         switch($user->role){

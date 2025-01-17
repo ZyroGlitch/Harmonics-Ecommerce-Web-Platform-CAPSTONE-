@@ -8,7 +8,7 @@ class Order extends Model
 {
     protected $fillable = [
         'orderID',
-        'userID',
+        'id',
         'productID',
         'quantity',
         'subtotal',
