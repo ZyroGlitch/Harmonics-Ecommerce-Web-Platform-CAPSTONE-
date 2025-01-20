@@ -40,7 +40,7 @@ export default function CustomerLayout({ children }) {
                             </li>
                         </ul>
 
-                        <Link href={route('customer.login')} type='button' className="btn btn-outline-dark login-btn">LOGIN</Link>
+                        <Link href={route('guest.login')} type='button' className="btn btn-outline-dark login-btn">LOGIN</Link>
                     </div>
                 </div>
             </nav>

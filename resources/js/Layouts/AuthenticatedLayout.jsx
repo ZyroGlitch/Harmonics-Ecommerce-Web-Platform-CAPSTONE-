@@ -42,7 +42,7 @@ export default function AuthenticatedLayout({ children }) {
                     <div className="collapse navbar-collapse" id="navbarNavDropdown">
                         <ul className="navbar-nav fw-bold fs-6 mx-auto">
                             <li className="nav-item">
-                                <Link className="nav-link" href={route('customer.product')}>PRODUCTS</Link>
+                                <Link className="nav-link" href={route('customer.dashboard')}>PRODUCTS</Link>
                             </li>
                             <li className="nav-item">
                                 <Link className="nav-link" href={route('customer.order')}>ORDERS</Link>

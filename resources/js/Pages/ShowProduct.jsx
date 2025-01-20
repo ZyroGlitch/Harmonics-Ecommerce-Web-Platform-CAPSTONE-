@@ -2,7 +2,7 @@ import React from 'react'
 import AuthenticatedLayout from '../Layouts/AuthenticatedLayout'
 import { FaStar } from "react-icons/fa6";
 import { Link, useForm } from '@inertiajs/react';
-import { useRoute } from 'routes-ziggy';
+import { useRoute } from '../../../vendor/tightenco/ziggy';
 
 function ShowProduct({ show_product }) {
 
@@ -11,7 +11,7 @@ function ShowProduct({ show_product }) {
     // console.log(show_product);
 
     const { data, setData, post, processing } = useForm({
-        productID: show_product.productID,
+        productID: show_product.id,
         price: show_product.price,
         quantity: 1,
     });
@@ -37,17 +37,17 @@ function ShowProduct({ show_product }) {
                     </div>
                     <div className="col-lg-6 col-md-6">
                         <nav aria-label="breadcrumb mb-3">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item fw-semibold">
+                            <ol className="breadcrumb">
+                                <li className="breadcrumb-item fw-semibold">
                                     <Link
-                                        href={route('customer.product')}
+                                        href={route('customer.dashboard')}
                                         className='text-dark'
                                         style={{ textDecoration: 'none' }}
                                     >Back
                                     </Link>
                                 </li>
 
-                                <li class="breadcrumb-item fw-semibold active" aria-current="page">{show_product.name}
+                                <li className="breadcrumb-item fw-semibold active" aria-current="page">{show_product.name}
                                 </li>
                             </ol>
                         </nav>
@@ -90,7 +90,7 @@ function ShowProduct({ show_product }) {
                                 <div className="d-grid">
                                     <button
                                         type='submit'
-                                        href={route('customer.buyProduct', show_product.productID)} className="btn btn-primary rounded-pill shadow"
+                                        href={route('customer.buyProduct', show_product.id)} className="btn btn-primary rounded-pill shadow"
                                         disabled={processing}
                                     >BUY
                                     </button>

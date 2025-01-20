@@ -3,9 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 use Symfony\Component\HttpFoundation\Response;
 
 class AdminMiddleware
@@ -17,9 +15,7 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $userID = Session::get('userID');
-
-        $user = User::where('userID',$userID)->first();
+        $user = $request->user();
 
         // dd($user->role);
         switch($user->role){

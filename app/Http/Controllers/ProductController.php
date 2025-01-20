@@ -35,6 +35,6 @@ class ProductController extends Controller
     }
 
     public function signout(){
-        return redirect()->route('customer.login');
+        return redirect()->route('guest.login');
     }
 }

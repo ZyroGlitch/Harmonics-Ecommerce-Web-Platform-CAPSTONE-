@@ -16,7 +16,7 @@ export default function Registration() {
     };
 
     // Inertia Form Helper
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, post, processing, errors, reset } = useForm({
         firstname: '',
         lastname: '',
         phone: '',
@@ -27,7 +27,14 @@ export default function Registration() {
 
     function submit(e) {
         e.preventDefault();
-        post(route('customer.register'));
+
+        post(route('guest.register', {
+            onSuccess() {
+                // Reset the useForm data
+                reset();
+            }
+        }
+        ));
     }
 
     // console.log(useForm()); to show all the useForm functions
@@ -48,7 +55,7 @@ export default function Registration() {
                 <div className="text-center mb-4">
                     <h1 className="fw-bold">Get Started</h1>
                     <h6 className="fw-bold">
-                        Already have an account? <Link href={route('customer.login')} className="text-success" style={{ textDecoration: "none" }}>
+                        Already have an account? <Link href={route('guest.login')} className="text-success" style={{ textDecoration: "none" }}>
                             Sign In
                         </Link>
                     </h6>

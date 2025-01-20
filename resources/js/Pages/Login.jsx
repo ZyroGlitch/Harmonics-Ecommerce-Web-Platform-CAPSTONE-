@@ -18,14 +18,19 @@ export default function Login() {
         setShowPassword(!showPassword);
     };
 
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
     });
 
     function submit(e) {
         e.preventDefault();
-        post(route('customer.authentication'));
+        post(route('guest.authentication', {
+            onSuccess() {
+                // Reset the useForm data
+                reset();
+            }
+        }));
     }
 
 
@@ -116,7 +121,7 @@ export default function Login() {
 
                                     <div className="d-flex justify-content-center align-items-center gap-2 mb-2">
                                         <p className='m-0'>Don't have an account? </p>
-                                        <Link href={route('customer.formRegistration')} className='text-dark fw-semibold' style={{ textDecoration: 'none' }}>Sign up</Link>
+                                        <Link href={route('guest.formRegistration')} className='text-dark fw-semibold' style={{ textDecoration: 'none' }}>Sign up</Link>
                                     </div>
 
                                     {/* {

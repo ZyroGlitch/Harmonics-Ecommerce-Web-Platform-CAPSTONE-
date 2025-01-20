@@ -10,19 +10,20 @@ function Product() {
     const [imagePreview, setImagePreview] = useState(null);
 
     // Inertia Form Helper
-    const { data, setData, post, processing, errors } = useForm({
-        name: null,
-        category: null,
-        price: null,
-        stock: null,
-        description: null,
-        image: null,
+    const { data, setData, post, processing, errors, reset } = useForm({
+        name: '',
+        category: 'Music',
+        price: '',
+        stock: '',
+        description: '',
+        image: '',
     });
 
     // Handle file selection and set image preview
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         setData('image', file); // Set the file to the Inertia form
+
         if (file) {
             setImagePreview(URL.createObjectURL(file)); // Generate preview URL
         } else {
@@ -34,15 +35,11 @@ function Product() {
         e.preventDefault();
 
         // Submit the form data to the backend
-        post(route('admin.productUpload'));
-
-        // Reset the form fields
-        // setData('name', null);
-        // setData('category', null);
-        // setData('price', null);
-        // setData('name', null);
-        // setData('stock', null);
-        // setData('image', null);
+        post(route('admin.productUpload'), {
+            onSuccess() {
+                reset();
+            }
+        });
     }
 
 
@@ -110,7 +107,6 @@ function Product() {
                                         value={data.category}
                                         onChange={(e) => { setData('category', e.target.value) }}
                                     >
-                                        <option selected>Select product category</option>
                                         <option value="Music">Music</option>
                                         <option value="Sports">Sports</option>
                                         <option value="Fitness">Fitness</option>
