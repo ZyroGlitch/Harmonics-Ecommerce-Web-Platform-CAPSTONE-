@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 
 
 //Get Routes
+Route::middleware('guest')->group(function () {
 Route::get('/', [UserController::class, 'index'])
 ->name('guest.landingPage');
 
@@ -21,6 +22,8 @@ Route::post('/register',[UserController::class, 'register'])
 
 Route::post('/authentication',[UserController::class, 'authentication'])
 ->name('guest.authentication');
+});
+
 
 
 // MIDDLEWARE ROUTES
@@ -36,14 +39,17 @@ Route::middleware(['auth',CustomerMiddleware::class])->name('customer.')->group(
     Route::get('/showProduct/{productID}', [UserController::class, 'showProduct'])
     ->name('showProduct');
 
-    Route::post('/buyProduct/{productID}', [UserController::class, 'buyProduct'])
+    Route::post('/buyProduct', [UserController::class, 'buyProduct'])
     ->name('buyProduct');
+
+    Route::get('/buyProduct/reset/{productID}', [UserController::class, 'reset_buyProduct'])
+    ->name('reset_buyProduct');
+
+    Route::post('/addCart', [UserController::class, 'addCart'])
+    ->name('addCart');
 });
 
 
 require __DIR__ . '/admin.php';
-
-
-
 
 ;

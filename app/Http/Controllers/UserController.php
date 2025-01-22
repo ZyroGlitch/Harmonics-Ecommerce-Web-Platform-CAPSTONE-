@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
 use App\Models\User;
 use App\Models\Product;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -120,16 +122,66 @@ class UserController extends Controller
         return inertia('ShowProduct', ['show_product' => $product]);
     }
 
-    public function buyProduct(Request $request){
-        $field = $request->validate([
-            'productID' => 'required|integer',
-            'price' => 'required|integer',
-            'quantity' => 'required|integer|min:1',
-        ]);
+    public function buyProduct(Request $request)
+{
+    $data = $request->validate([
+        'productID' => 'required|integer',
+        'price' => 'required|numeric',
+        'quantity' => 'required|integer',
+    ]);
 
-        
-        
-        
+    $user = auth()->user(); // Get the authenticated user
+
+    $store = Cart::create([
+        // 'id' => '#' . strtoupper(Str::random(8)), // Ex. #ABC12345
+        'product_id' => $data['productID'],
+        'user_id' => $user->id,
+        'quantity' => $data['quantity'],
+        'subtotal' => $data['price'] * $data['quantity'],
+    ]);
+
+    if ($store) {
+        // Fetch the newly created product using its ID
+        $product = Cart::where('id', $store->id)->first();
+
+        $product_info = Product::where('id',$store->product_id)->first();
+
+        return inertia('DirectOrder', [
+            'products' => [$product],
+            'product_info' => [$product_info]
+        ]); // Pass as an array
+    } else {
+        return back()->withErrors(['error' => 'Failed to add product to cart']);
     }
+}
+
+    public function reset_buyProduct($productID){
+            return redirect()->route('customer.showProduct', ['productID' => $productID]);
+    }
+
+    public function addCart(Request $request)
+{
+    $data = $request->validate([
+        'productID' => 'required|integer',
+        'price' => 'required|numeric',
+        'quantity' => 'required|integer',
+    ]);
+
+    $user = auth()->user();
+
+    $store = Cart::create([
+        'product_id' => $data['productID'],
+        'user_id' => $user->id,
+        'quantity' => $data['quantity'],
+        'subtotal' => $data['price'] * $data['quantity'],
+    ]);
+
+    if ($store) {
+        return redirect()->back()->with('success', 'Product added to cart!');
+    } else {
+        return redirect()->back()->with('error', 'Failed to add product to cart!');
+    }
+}
+
 
 }
