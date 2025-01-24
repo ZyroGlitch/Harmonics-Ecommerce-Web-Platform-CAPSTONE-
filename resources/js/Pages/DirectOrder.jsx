@@ -4,10 +4,10 @@ import { Link } from '@inertiajs/react';
 import { Pagination } from 'rsuite';
 import { useRoute } from '../../../vendor/tightenco/ziggy';
 
-function DirectOrder({ products, product_info }) {
+function DirectOrder({ carts, products }) {
 
-    console.log(products);
-    console.log(product_info);
+    // console.log(carts);
+    // console.log(products);
 
     const [activePage, setActivePage] = React.useState(1);
 
@@ -16,17 +16,17 @@ function DirectOrder({ products, product_info }) {
     return (
         <div className="h-100 p-5">
 
-            {products.map((product) => {
-                // console.log(product.id);
+            {carts.map((cart) => {
+                // console.log("This is  the cart id : " + cart.product_id);
 
                 return (
-                    <nav aria-label="breadcrumb" key={product.id}>
+                    <nav aria-label="breadcrumb" key={cart.id}>
                         <ol className="breadcrumb fw-semibold">
                             <Link
                                 className="breadcrumb-item"
                                 style={{ textDecoration: 'none' }}
                                 href={route('customer.showProduct',
-                                    { productID: product.product_id }
+                                    { productID: cart.product_id }
                                 )}
                             >
                                 Back
@@ -41,15 +41,15 @@ function DirectOrder({ products, product_info }) {
             }
 
             {
-                product_info.map((info, index) => (
-                    products.map((product, productIndex) => (
+                products.map((info, index) => (
+                    carts.map((product, productIndex) => (
 
                         <div className="row justify-content-center h-100">
                             <div className="col-lg-8 col-md-8">
                                 <div className="card border-0 shadow rounded">
                                     <div className="card-header bg-primary text-light d-flex justify-content-between align-items-center">
                                         <h4>Shopping Cart</h4>
-                                        <h4>{products.length} Items</h4>
+                                        <h4>{carts.length} Items</h4>
                                     </div>
 
                                     <div className="card-body">
@@ -123,23 +123,23 @@ function DirectOrder({ products, product_info }) {
                                         </div>
 
                                         <p className='fw-semibold mb-2'>MODE OF PAYMENT</p>
-                                        <div class="form-check border rounded shadow-sm p-2 mb-2">
-                                            <input class="form-check-input ms-2 me-3" type="radio" name="flexRadioDefault" id="cod" />
-                                            <label class="form-check-label" for="cod">
+                                        <div className="form-check border rounded shadow-sm p-2 mb-2">
+                                            <input className="form-check-input ms-2 me-3" type="radio" name="flexRadioDefault" id="cod" />
+                                            <label className="form-check-label" htmlFor="cod">
                                                 Cash on delivery
                                             </label>
                                         </div>
 
-                                        <div class="form-check border rounded shadow-sm p-2 mb-2">
-                                            <input class="form-check-input ms-2 me-3" type="radio" name="flexRadioDefault" id="Gcash" />
-                                            <label class="form-check-label" for="Gcash">
+                                        <div className="form-check border rounded shadow-sm p-2 mb-2">
+                                            <input className="form-check-input ms-2 me-3" type="radio" name="flexRadioDefault" id="Gcash" />
+                                            <label className="form-check-label" htmlFor="Gcash">
                                                 Gcash
                                             </label>
                                         </div>
 
-                                        <div class="form-check border  rounded shadow-sm p-2 mb-3">
-                                            <input class="form-check-input ms-2 me-3" type="radio" name="flexRadioDefault" id="palawan" />
-                                            <label class="form-check-label" for="palawan">
+                                        <div className="form-check border  rounded shadow-sm p-2 mb-3">
+                                            <input className="form-check-input ms-2 me-3" type="radio" name="flexRadioDefault" id="palawan" />
+                                            <label className="form-check-label" htmlFor="palawan">
                                                 Palawan Express Pera Padala
                                             </label>
                                         </div>

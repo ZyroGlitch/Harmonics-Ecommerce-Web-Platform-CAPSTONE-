@@ -79,9 +79,13 @@ export default function AuthenticatedLayout({ children }) {
                                 </span>
                             </Link>
 
-                            <Link href="#" className='text-dark'>
-                                <FaCartShopping className='fs-4' />
+                            <Link
+                                href={route('customer.cart')}
+                                className="text-dark"
+                            >
+                                <FaCartShopping className="fs-4" />
                             </Link>
+
 
                             <Link href='#' className="text-center">
                                 <img src={profile} alt="profile" className="object-fit-contain rounded-pill" style={{ width: '45px', height: '45px' }} />
@@ -91,7 +95,7 @@ export default function AuthenticatedLayout({ children }) {
 
                     </div>
                 </div>
-            </nav>
+            </nav >
 
             <main style={{ paddingTop: '66px' }}>
                 {children}

@@ -1,18 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import AuthenticatedLayout from '../Layouts/AuthenticatedLayout';
 import { FaStar } from "react-icons/fa6";
-import { Link, useForm } from '@inertiajs/react';
+import { Link, useForm, usePage } from '@inertiajs/react';
 import { useRoute } from '../../../vendor/tightenco/ziggy';
-import { Notification } from 'rsuite';
+import { toast, Toaster } from 'sonner';
 
 function ShowProduct({ show_product }) {
     const route = useRoute();
+    const { flash } = usePage().props;
 
     const { data, setData, post, processing, errors, reset } = useForm({
         productID: show_product.id,
         price: show_product.price,
         quantity: 1,
     });
+
+    // Use useEffect to trigger toast notifications
+    useEffect(() => {
+        flash.success ? toast.success(flash.success) : null;
+        flash.error ? toast.error(flash.error) : null;
+    }, [flash]);
 
     function handleBuy(e) {
         e.preventDefault();
@@ -34,6 +41,10 @@ function ShowProduct({ show_product }) {
 
     return (
         <div className="container h-100 py-5">
+            {/* Initialize the Sooner Toaster */}
+            <Toaster position='top-right' expand={true} richColors />
+
+
             <div className="row justify-content-center align-items-center">
                 <div className="col-lg-6 col-md-6 text-center">
                     <img
@@ -114,11 +125,6 @@ function ShowProduct({ show_product }) {
                     </div>
                 </div>
             </div>
-
-
-            <Notification type="success" header="Operation successful">
-                The email has been sent successfully, please check it in the mailbox.
-            </Notification>
         </div>
     );
 }

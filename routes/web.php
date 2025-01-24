@@ -39,6 +39,10 @@ Route::middleware(['auth',CustomerMiddleware::class])->name('customer.')->group(
     Route::get('/showProduct/{productID}', [UserController::class, 'showProduct'])
     ->name('showProduct');
 
+    Route::get('/show_cart/{cart_id}/{product_id}', [UserController::class, 'show_cart'])->name('show_cart');
+
+    Route::get('/cart',[UserController::class, 'cart'])->name('cart');
+
     Route::post('/buyProduct', [UserController::class, 'buyProduct'])
     ->name('buyProduct');
 

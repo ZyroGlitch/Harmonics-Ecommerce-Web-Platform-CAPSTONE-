@@ -29,6 +29,38 @@ class UserController extends Controller
         return inertia('Registration');
     }
 
+    public function cart(){
+         // Fetch all carts
+        $user = auth()->user();
+        // $carts = Cart::where('user_id', $user->id)->get();
+
+        // // Get products related to the carts
+        // $products = Product::whereIn('id', $carts->pluck('product_id'))->get();
+
+        $carts = Cart::with('product')->where('user_id', $user->id)->get();
+        // dd($carts);
+
+        return inertia('Cart', [
+            'carts' => $carts
+        ]);
+    }
+
+    public function show_cart($cart_id,$product_id){
+
+        if($cart_id && $product_id){
+            $carts = Cart::find($cart_id);
+            $products = Product::find($product_id);
+    
+            return inertia('DirectOrder', [
+                'carts' => [$carts],
+                'products' => [$products]
+            ]);
+            
+        }
+    }
+
+
+
     public function authentication(Request $request) 
     {
         $credentials = $request->validate([
@@ -141,15 +173,10 @@ class UserController extends Controller
     ]);
 
     if ($store) {
-        // Fetch the newly created product using its ID
-        $product = Cart::where('id', $store->id)->first();
-
-        $product_info = Product::where('id',$store->product_id)->first();
-
-        return inertia('DirectOrder', [
-            'products' => [$product],
-            'product_info' => [$product_info]
-        ]); // Pass as an array
+        return redirect()->route('customer.show_cart', [
+            'cart_id' => $store->id, 
+            'product_id' => $store->product_id
+        ]);
     } else {
         return back()->withErrors(['error' => 'Failed to add product to cart']);
     }
