@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\OrderController;
 use App\Http\Middleware\CustomerMiddleware;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -39,18 +40,15 @@ Route::middleware(['auth',CustomerMiddleware::class])->name('customer.')->group(
     Route::get('/showProduct/{productID}', [UserController::class, 'showProduct'])
     ->name('showProduct');
 
-    Route::get('/show_cart/{cart_id}/{product_id}', [UserController::class, 'show_cart'])->name('show_cart');
-
-    Route::get('/cart',[UserController::class, 'cart'])->name('cart');
+    Route::get('/cart/{cart_id?}',[UserController::class, 'cart'])->name('cart');
 
     Route::post('/buyProduct', [UserController::class, 'buyProduct'])
     ->name('buyProduct');
 
-    Route::get('/buyProduct/reset/{productID}', [UserController::class, 'reset_buyProduct'])
-    ->name('reset_buyProduct');
-
     Route::post('/addCart', [UserController::class, 'addCart'])
     ->name('addCart');
+
+    Route::post('cart/checkout',[OrderController::class, 'checkout'])->name('checkout');
 });
 
 

@@ -80,7 +80,7 @@ export default function AuthenticatedLayout({ children }) {
                             </Link>
 
                             <Link
-                                href={route('customer.cart')}
+                                href={route('customer.cart', { cart_id: null })}
                                 className="text-dark"
                             >
                                 <FaCartShopping className="fs-4" />

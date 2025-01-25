@@ -29,36 +29,51 @@ class UserController extends Controller
         return inertia('Registration');
     }
 
-    public function cart(){
-         // Fetch all carts
-        $user = auth()->user();
-        // $carts = Cart::where('user_id', $user->id)->get();
-
-        // // Get products related to the carts
-        // $products = Product::whereIn('id', $carts->pluck('product_id'))->get();
-
-        $carts = Cart::with('product')->where('user_id', $user->id)->get();
-        // dd($carts);
-
-        return inertia('Cart', [
-            'carts' => $carts
-        ]);
+    public function create()
+    {
+        return inertia('Registration');
     }
 
-    public function show_cart($cart_id,$product_id){
+    public function dashboard()
+    {
+        $data = Product::all();
+        return inertia('Dashboard',['products' => $data]);
+    }
 
-        if($cart_id && $product_id){
-            $carts = Cart::find($cart_id);
-            $products = Product::find($product_id);
+    public function order(){
+        return inertia('Order');
+    }
+
+    public function showProduct($productID){
+        // dd($product->productID);
+
+        $product = Product::where('id', $productID)->first();
+        return inertia('ShowProduct', ['show_product' => $product]);
+    }
+
+    public function cart($cart_id = null){
+
+        if($cart_id !== null){
+            $carts = Cart::with('product')->where('id',$cart_id)->first();
+
+            // dd($carts);
     
-            return inertia('DirectOrder', [
+            return inertia('Cart', [
                 'carts' => [$carts],
-                'products' => [$products]
             ]);
             
+        }else{
+            // Fetch all carts
+            $user = auth()->user();
+
+            $carts = Cart::with('product')->where('user_id', $user->id)->get();
+            // dd($carts);
+
+            return inertia('Cart', [
+                'carts' => $carts
+            ]);
         }
     }
-
 
 
     public function authentication(Request $request) 
@@ -89,14 +104,8 @@ class UserController extends Controller
         }
     }
 
-    public function create()
-    {
-        return inertia('Registration');
-    }
+    
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function register(Request $request)
 {
     $fields = $request->validate([
@@ -137,22 +146,6 @@ class UserController extends Controller
 }
 
 
-    public function dashboard()
-    {
-        $data = Product::all();
-        return inertia('Dashboard',['products' => $data]);
-    }
-
-    public function order(){
-        return inertia('Order');
-    }
-
-    public function showProduct($productID){
-        // dd($product->productID);
-
-        $product = Product::where('id', $productID)->first();
-        return inertia('ShowProduct', ['show_product' => $product]);
-    }
 
     public function buyProduct(Request $request)
 {
@@ -173,18 +166,18 @@ class UserController extends Controller
     ]);
 
     if ($store) {
-        return redirect()->route('customer.show_cart', [
-            'cart_id' => $store->id, 
-            'product_id' => $store->product_id
+        // return redirect()->route('customer.show_cart', [
+        //     'cart_id' => $store->id, 
+        //     'product_id' => $store->product_id
+        // ]);
+
+        return redirect()->route('customer.cart', [
+            'cart_id' => $store->id
         ]);
     } else {
         return back()->withErrors(['error' => 'Failed to add product to cart']);
     }
 }
-
-    public function reset_buyProduct($productID){
-            return redirect()->route('customer.showProduct', ['productID' => $productID]);
-    }
 
     public function addCart(Request $request)
 {

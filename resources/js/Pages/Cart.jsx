@@ -1,16 +1,26 @@
 import React from 'react';
 import AuthenticatedLayout from '../Layouts/AuthenticatedLayout';
-import { Link } from '@inertiajs/react';
+import { Link, useForm } from '@inertiajs/react';
 import { Pagination } from 'rsuite';
-import { useRoute } from '../../../vendor/tightenco/ziggy/src/js';
+import { useRoute } from '../../../vendor/tightenco/ziggy';
 
 function Cart({ carts }) {
 
-    console.log(carts);
+    // console.log(carts);
 
     const [activePage, setActivePage] = React.useState(1);
 
     const route = useRoute();
+
+    const { data, setData, post, processing } = useForm({
+        payment_method: '',
+        address: 'UM Matina Gravahan, Davao City',
+    });
+
+    function submit(e) {
+        e.preventDefault();
+        post(route('customer.checkout'));
+    }
 
     return (
         <div className="h-100 p-5">
@@ -101,52 +111,82 @@ function Cart({ carts }) {
                 <div className="col-lg-4 col-md-4">
                     <div className="card border-0 shadow rounded">
                         <div className="card-body">
-                            <div className="border-bottom mb-4">
-                                <h4>Order Summary</h4>
-                            </div>
 
-                            <div className="d-flex justify-content-between align-items-center fw-semibold">
-                                <p>ITEMS {carts.length}</p>
-                                <p>
-                                    ₱ {carts.reduce((total, cart) => total + cart.quantity * cart.product.price, 0).toFixed(2)}
-                                </p>
-                            </div>
+                            <form onSubmit={submit}>
 
-                            <div className="d-flex justify-content-between align-items-center fw-semibold mb-3">
-                                <p>SHIPPING</p>
-                                <p>₱50.00</p>
-                            </div>
+                                <div className="border-bottom mb-4">
+                                    <h4>Order Summary</h4>
+                                </div>
 
-                            <p className='fw-semibold mb-2'>MODE OF PAYMENT</p>
-                            <div className="form-check border rounded shadow-sm p-2 mb-2">
-                                <input className="form-check-input ms-2 me-3" type="radio" name="flexRadioDefault" id="cod" />
-                                <label className="form-check-label" htmlFor="cod">
-                                    Cash on delivery
-                                </label>
-                            </div>
+                                <div className="d-flex justify-content-between align-items-center fw-semibold">
+                                    <p>ITEMS {carts.length}</p>
+                                    <p>
+                                        ₱ {carts.reduce((total, cart) => total + cart.quantity * cart.product.price, 0).toFixed(2)}
+                                    </p>
+                                </div>
 
-                            <div className="form-check border rounded shadow-sm p-2 mb-2">
-                                <input className="form-check-input ms-2 me-3" type="radio" name="flexRadioDefault" id="Gcash" />
-                                <label className="form-check-label" htmlFor="Gcash">
-                                    Gcash
-                                </label>
-                            </div>
+                                <div className="d-flex justify-content-between align-items-center fw-semibold mb-3">
+                                    <p>SHIPPING</p>
+                                    <p>₱50.00</p>
+                                </div>
 
-                            <div className="form-check border  rounded shadow-sm p-2 mb-3">
-                                <input className="form-check-input ms-2 me-3" type="radio" name="flexRadioDefault" id="palawan" />
-                                <label className="form-check-label" htmlFor="palawan">
-                                    Palawan Express Pera Padala
-                                </label>
-                            </div>
+                                <p className='fw-semibold mb-2'>MODE OF PAYMENT</p>
+                                <div className="form-check border rounded shadow-sm p-2 mb-2">
+                                    <input
+                                        className="form-check-input ms-2 me-3"
+                                        type="radio"
+                                        name="flexRadioDefault"
+                                        id="cod"
+                                        value={data.payment_method}
+                                        onChange={(e) => setData('payment_method', e.target.id)}
+                                    />
+                                    <label className="form-check-label" htmlFor="cod">
+                                        Cash on delivery
+                                    </label>
+                                </div>
 
-                            <div className="mb-4">
-                                <p className='fw-semibold'>ADDRESS</p>
-                                <p>UM Matina Gravahan, Davao City</p>
-                            </div>
+                                <div className="form-check border rounded shadow-sm p-2 mb-2">
+                                    <input
+                                        className="form-check-input ms-2 me-3"
+                                        type="radio"
+                                        name="flexRadioDefault"
+                                        id="gcash"
+                                        value={data.payment_method}
+                                        onChange={(e) => setData('payment_method', e.target.id)}
+                                    />
+                                    <label className="form-check-label" htmlFor="gcash">
+                                        Gcash
+                                    </label>
+                                </div>
 
-                            <div className="d-grid">
-                                <button type='submit' className="btn btn-light fw-bold">CHECKOUT</button>
-                            </div>
+                                <div className="form-check border  rounded shadow-sm p-2 mb-3">
+                                    <input
+                                        className="form-check-input ms-2 me-3"
+                                        type="radio"
+                                        name="flexRadioDefault"
+                                        id="paymaya"
+                                        value={data.payment_method}
+                                        onChange={(e) => setData('payment_method', e.target.id)}
+                                    />
+                                    <label className="form-check-label" htmlFor="paymaya">
+                                        Paymaya
+                                    </label>
+                                </div>
+
+                                <div className="mb-4">
+                                    <p className='fw-semibold'>ADDRESS</p>
+                                    <p>UM Matina Gravahan, Davao City</p>
+                                </div>
+
+                                <div className="d-grid">
+                                    <button
+                                        type='submit'
+                                        className="btn btn-primary fw-bold"
+                                        disabled={processing}
+                                    >CHECKOUT
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
