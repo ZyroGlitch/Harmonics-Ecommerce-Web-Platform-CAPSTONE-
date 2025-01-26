@@ -13,6 +13,7 @@ function Cart({ carts }) {
     const route = useRoute();
 
     const { data, setData, post, processing } = useForm({
+        cart_id: carts.map((cart) => cart.id),
         payment_method: '',
         address: 'UM Matina Gravahan, Davao City',
     });
@@ -137,8 +138,8 @@ function Cart({ carts }) {
                                         type="radio"
                                         name="flexRadioDefault"
                                         id="cod"
-                                        value={data.payment_method}
-                                        onChange={(e) => setData('payment_method', e.target.id)}
+                                        value="COD"
+                                        onChange={(e) => setData('payment_method', e.target.value)}
                                     />
                                     <label className="form-check-label" htmlFor="cod">
                                         Cash on delivery
@@ -151,8 +152,8 @@ function Cart({ carts }) {
                                         type="radio"
                                         name="flexRadioDefault"
                                         id="gcash"
-                                        value={data.payment_method}
-                                        onChange={(e) => setData('payment_method', e.target.id)}
+                                        value="Gcash"
+                                        onChange={(e) => setData('payment_method', e.target.value)}
                                     />
                                     <label className="form-check-label" htmlFor="gcash">
                                         Gcash
@@ -165,8 +166,8 @@ function Cart({ carts }) {
                                         type="radio"
                                         name="flexRadioDefault"
                                         id="paymaya"
-                                        value={data.payment_method}
-                                        onChange={(e) => setData('payment_method', e.target.id)}
+                                        value="Paymaya"
+                                        onChange={(e) => setData('payment_method', e.target.value)}
                                     />
                                     <label className="form-check-label" htmlFor="paymaya">
                                         Paymaya

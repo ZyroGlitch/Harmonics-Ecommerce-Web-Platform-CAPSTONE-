@@ -18,7 +18,11 @@ return new class extends Migration
             $table->integer('quantity');
             $table->decimal('subtotal',10,2);
             $table->string('payment_method',length:50);
-            $table->string('order_status',length:50);
+            $table->string('address');
+            $table->string('phone_number',length:11);
+            $table->string('referrence_number')->nullable();
+            $table->string('receipt')->nullable();
+            $table->string('order_status',length:50)->default('Processing');
             $table->timestamps();
         });
     }

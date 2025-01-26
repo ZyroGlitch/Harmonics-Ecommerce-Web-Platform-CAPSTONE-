@@ -49,6 +49,8 @@ Route::middleware(['auth',CustomerMiddleware::class])->name('customer.')->group(
     ->name('addCart');
 
     Route::post('cart/checkout',[OrderController::class, 'checkout'])->name('checkout');
+
+    Route::post('/cart/checkout/store',[OrderController::class,'store_checkout'])->name(('store_checkout'));
 });
 
 

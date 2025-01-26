@@ -1,18 +1,31 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import AuthenticatedLayout from '../Layouts/AuthenticatedLayout';
 import { FaCartShopping } from "react-icons/fa6";
 import { FaRegHeart } from "react-icons/fa6";
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { useRoute } from 'routes-ziggy';
+import { toast, Toaster } from 'sonner';
 
 function Dashboard({ products }) {
     // check fetch data from product table
-    console.log(products);
+    // console.log(products);
 
     const route = useRoute();
 
+    const { flash } = usePage().props;
+
+    // Use useEffect to trigger toast notifications
+    useEffect(() => {
+        flash.success ? toast.success(flash.success) : null;
+        flash.error ? toast.error(flash.error) : null;
+    }, [flash]);
+
     return (
         <div className='container h-100 py-5' style={{ fontFamily: 'Montserrat, sans-serif' }}>
+
+            {/* Initialize the Sooner Toaster */}
+            <Toaster position='top-right' expand={true} richColors />
+
             <div className='grid-product justify-content-center align-items-center h-100'>
 
                 {/* Check if the products array is empty */}
