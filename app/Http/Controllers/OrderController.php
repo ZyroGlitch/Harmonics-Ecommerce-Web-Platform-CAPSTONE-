@@ -14,42 +14,59 @@ class OrderController extends Controller
     public function checkout(Request $request)
     {
         // dd($request);
+        // If the customer choose the cod payment method
+
+        $auth_user = auth()->user();
 
         if($request->payment_method === 'COD'){
-            $cart = Cart::with('product')->where('id',$request->cart_id)->first();
-            // dd($cart);
 
-            $auth_user = auth()->user();
+            foreach($request->cart_id as $cart_id){
+                $cart = Cart::with('product')->where('id',$cart_id)->first();
+                // dd($cart);
 
-            $user = User::find($auth_user->id);
+                $user = User::find($auth_user->id);
 
-            $store = Order::create([
-                'orderID' => '#' . strtoupper(Str::random(7)),
-                'user_id' => $auth_user->id,
-                'product_id' => $cart->product_id,
-                'quantity' => $cart->quantity,
-                'subtotal' => $cart->subtotal,
-                'payment_method' => $request->payment_method,
-                'address' => $user->address,
-                'phone_number' => $user->phone,
-            ]);
+                $store = Order::create([
+                    'orderID' => '#' . strtoupper(Str::random(7)),
+                    'user_id' => $auth_user->id,
+                    'product_id' => $cart->product_id,
+                    'quantity' => $cart->quantity,
+                    'subtotal' => $cart->subtotal,
+                    'payment_method' => $request->payment_method,
+                    'address' => $user->address,
+                    'phone_number' => $user->phone,
+                ]);
 
-
-            if($store){
-                return redirect()->route('customer.dashboard')->with('success','Order Added Successfully.');
-            }else{
-                return redirect()->back()->with('error','Order failed to store.');
+                if($store){
+                    Cart::where('id',$cart_id)->delete();
+                }else{
+                    return redirect()->back()->with('error', 'Cart ID # ' . $cart_id . ' failed to store.');
+                }
             }
 
-
-        }else{
-            $carts = Cart::with('product')->where('id',$request->cart_id)->get();
+            return redirect()->route('customer.dashboard')->with('success','Order Added Successfully.');
             
+        }else{
+            // If the customer choose either gcash or paymaya
+            if(count($request->cart_id) === 1){
+                $carts = Cart::with('product')->where('id',$request->cart_id)->first();
 
-            return inertia('Checkout',[
-            'carts' => $carts,
-            'payment_method' => $request->payment_method
-        ]);
+                return inertia('Checkout',[
+                    'carts' => $carts,
+                    'payment_method' => $request->payment_method
+                ]);
+            }else{
+                $carts = Cart::with('product')->where('user_id',$auth_user->id)->get();
+
+                return inertia('Checkout',[
+                    'carts' => $carts,
+                    'payment_method' => $request->payment_method
+                ]);
+                // dd($carts);
+            }
+
+            
+            
         }
     }
 
@@ -67,32 +84,35 @@ class OrderController extends Controller
 
             $auth_user = auth()->user();
 
-            $cart = Cart::with('product')->where('id',$request->cart_id)->first();
-            // dd($cart);
 
-            $user = User::find($auth_user->id);
-            
-            $store = Order::create([
-                'orderID' => '#' . strtoupper(Str::random(7)),
-                'user_id' => $auth_user->id,
-                'product_id' => $cart->product_id,
-                'quantity' => $cart->quantity,
-                'subtotal' => $cart->subtotal,
-                'payment_method' => $request->payment_method,
-                'address' => $user->address,
-                'phone_number' => $user->phone,
-                'referrence_number' => $request->referrence,
-                'receipt' => $fields['receipt']
-            ]);
-            
-            if($store){
-                return redirect()->route('customer.dashboard')->with('success','Order Added Successfully.');
-            }else{
-                dd('Failed to Store the data in the database.');
-                // return redirect()->back()->with('error','Order failed to store.');
+            foreach($request->cart_id as $cart_id){
+                $cart = Cart::with('product')->where('id',$cart_id)->first();
+                // dd($cart);
+
+                $user = User::find($auth_user->id);
+                
+                $store = Order::create([
+                    'orderID' => '#' . strtoupper(Str::random(7)),
+                    'user_id' => $auth_user->id,
+                    'product_id' => $cart->product_id,
+                    'quantity' => $cart->quantity,
+                    'subtotal' => $cart->subtotal,
+                    'payment_method' => $request->payment_method,
+                    'address' => $user->address,
+                    'phone_number' => $user->phone,
+                    'referrence_number' => $request->referrence,
+                    'receipt' => $fields['receipt']
+                ]); 
+
+                if($store){
+                    Cart::where('id',$cart_id)->delete();
+                }else{
+                    dd(`Failed to delete the $cart_id in the Cart`);
+                }
             }
-
         }
+
+        return redirect()->route('customer.dashboard')->with('success','Order Added Successfully.');
 
     }
 }

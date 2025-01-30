@@ -149,6 +149,7 @@ class UserController extends Controller
 
     public function buyProduct(Request $request)
 {
+    // dd($request);
     $data = $request->validate([
         'productID' => 'required|integer',
         'price' => 'required|numeric',

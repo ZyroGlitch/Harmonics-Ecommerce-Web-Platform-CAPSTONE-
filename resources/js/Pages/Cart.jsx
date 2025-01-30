@@ -12,7 +12,7 @@ function Cart({ carts }) {
 
     const route = useRoute();
 
-    const { data, setData, post, processing } = useForm({
+    const { setData, post, processing } = useForm({
         cart_id: carts.map((cart) => cart.id),
         payment_method: '',
         address: 'UM Matina Gravahan, Davao City',

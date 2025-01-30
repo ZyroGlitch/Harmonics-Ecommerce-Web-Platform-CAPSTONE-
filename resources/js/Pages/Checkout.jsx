@@ -8,16 +8,18 @@ function Checkout({ carts, payment_method }) {
 
     // console.log(carts);
     // console.log(payment_method);
-    // console.log(address);
 
     const route = useRoute();
 
     const { data, setData, post, processing, errors, reset } = useForm({
-        cart_id: carts.map(cart => cart.id),
+        cart_id: Array.isArray(carts)
+            ? (carts.length === 1 ? [carts.id] : carts.map(cart => cart.id))
+            : [carts.id],
         payment_method: payment_method,
         referrence: '',
         receipt: '',
     });
+
 
     const [receipt, preview_Receipt] = useState(null);
 
@@ -78,23 +80,41 @@ function Checkout({ carts, payment_method }) {
                             <form onSubmit={submit}>
                                 <div className="mb-4">
                                     <h5>Items Summary</h5>
-                                    {
-                                        carts.map(cart => (
-                                            <div key={cart.id}>
+                                    {Array.isArray(carts) ? (
+                                        carts.length === 1 ? (
+                                            <div key={carts.id}>
                                                 <div className="d-flex justify-content-between align-items-center">
-                                                    <p>{cart.product.name}</p>
-                                                    <p>₱{cart.subtotal}</p>
+                                                    <p>{carts.product.name}</p>
+                                                    <p>₱{carts.subtotal}</p>
                                                 </div>
                                             </div>
-                                        ))
-                                    }
+                                        ) : (
+                                            carts.map(cart => (
+                                                <div key={cart.id}>
+                                                    <div className="d-flex justify-content-between align-items-center">
+                                                        <p>{cart.product.name}</p>
+                                                        <p>₱{cart.subtotal}</p>
+                                                    </div>
+                                                </div>
+                                            ))
+                                        )
+                                    ) : (
+                                        <div key={carts.id}>
+                                            <div className="d-flex justify-content-between align-items-center">
+                                                <p>{carts.product.name}</p>
+                                                <p>₱{carts.subtotal}</p>
+                                            </div>
+                                        </div>
+                                    )}
+
 
                                     <div className="d-flex justify-content-between align-items-center fw-semibold">
                                         <p>Total</p>
                                         <p>₱
-                                            {
-                                                carts.reduce((subtotal, cart) => subtotal + Number(cart.subtotal), 0).toFixed(2)
-                                            }</p>
+                                            {(Array.isArray(carts) ? carts : [carts])
+                                                .reduce((subtotal, cart) => subtotal + Number(cart.subtotal || 0), 0)
+                                                .toFixed(2)}
+                                        </p>
                                     </div>
 
                                 </div>
