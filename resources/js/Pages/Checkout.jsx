@@ -27,7 +27,6 @@ function Checkout({ carts, payment_method }) {
         const receipt = e.target.files[0];
         setData('receipt', receipt);
 
-
         receipt
             ? preview_Receipt(URL.createObjectURL(receipt))
             : preview_Receipt(null);

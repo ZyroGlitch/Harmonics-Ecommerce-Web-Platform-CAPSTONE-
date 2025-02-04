@@ -52,8 +52,12 @@ class UserController extends Controller
     }
 
     public function cart($cart_id = null){
+        // dd($cart_id);
 
         if($cart_id !== null){
+
+            // dd('I entered.');
+            // Direct Buy Orders
             $carts = Cart::with('product')->where('id',$cart_id)->first();
 
             // dd($carts);
@@ -63,6 +67,7 @@ class UserController extends Controller
             ]);
             
         }else{
+            // This for clicking the cart icon
             // Fetch all carts
             $user = auth()->user();
 
@@ -158,25 +163,39 @@ class UserController extends Controller
 
     $user = auth()->user(); // Get the authenticated user
 
-    $store = Cart::create([
-        // 'id' => '#' . strtoupper(Str::random(8)), // Ex. #ABC12345
-        'product_id' => $data['productID'],
-        'user_id' => $user->id,
-        'quantity' => $data['quantity'],
-        'subtotal' => $data['price'] * $data['quantity'],
-    ]);
+    // Check if the product exist already in the cart table
+    $checkIfProductExists = Cart::where('user_id', $user->id)
+    ->where('product_id',$request->productID)
+    ->first();
 
-    if ($store) {
-        // return redirect()->route('customer.show_cart', [
-        //     'cart_id' => $store->id, 
-        //     'product_id' => $store->product_id
-        // ]);
+    // dd($checkIfProductExists);
 
-        return redirect()->route('customer.cart', [
-            'cart_id' => $store->id
+
+    if($checkIfProductExists){
+        // Update the quantity and subtotal
+        $checkIfProductExists->quantity += $request->quantity;
+        $checkIfProductExists->subtotal += $request->price * $request->quantity;
+        $checkIfProductExists->save();
+
+        return redirect()->route('customer.cart', ['cart_id' => $checkIfProductExists->id]);
+    }else{
+        $store = Cart::create([
+            // 'id' => '#' . strtoupper(Str::random(8)), // Ex. #ABC12345
+            'product_id' => $data['productID'],
+            'user_id' => $user->id,
+            'quantity' => $data['quantity'],
+            'subtotal' => $data['price'] * $data['quantity'],
         ]);
-    } else {
-        return back()->withErrors(['error' => 'Failed to add product to cart']);
+
+        // dd($store->id);
+
+        if($store){
+            // dd('success');
+            return redirect()->route('customer.cart', ['cart_id' => $store->id]);
+        }else{
+            // dd('Failed');
+            return redirect()->back()->withErrors(['error' => 'Failed to add product to cart']);
+        }
     }
 }
 
@@ -190,18 +209,30 @@ class UserController extends Controller
 
     $user = auth()->user();
 
-    $store = Cart::create([
-        'product_id' => $data['productID'],
-        'user_id' => $user->id,
-        'quantity' => $data['quantity'],
-        'subtotal' => $data['price'] * $data['quantity'],
-    ]);
+    // Check if the product exist already in the cart table
+    $checkIfProductExists = Cart::where('user_id', $user->id)
+    ->where('product_id',$request->productID)
+    ->first();
 
-    if ($store) {
+
+    if($checkIfProductExists){
+        // Update the quantity and subtotal
+        $checkIfProductExists->quantity += $request->quantity;
+        $checkIfProductExists->subtotal += $request->price * $request->quantity;
+        $checkIfProductExists->save();
+
         return redirect()->back()->with('success', 'Product added to cart!');
-    } else {
-        return redirect()->back()->with('error', 'Failed to add product to cart!');
-    }
+    }else{
+        $store = Cart::create([
+                'product_id' => $data['productID'],
+                'user_id' => $user->id,
+                'quantity' => $data['quantity'],
+                'subtotal' => $data['price'] * $data['quantity'],
+        ]);
+
+        $store ? redirect()->back()->with('success', 'Product added to cart!') 
+        : redirect()->back()->with('error', 'Failed to add product to cart!');
+    }  
 }
 
 

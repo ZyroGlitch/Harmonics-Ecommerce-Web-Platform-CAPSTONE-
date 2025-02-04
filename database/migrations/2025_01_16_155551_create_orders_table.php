@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->string('orderID',length:8)->primary()->unique();
             $table->foreignId('user_id')->constrained();
-            $table->foreignId('product_id')->constrained();
             $table->integer('quantity');
             $table->decimal('subtotal',10,2);
             $table->string('payment_method',length:50);
