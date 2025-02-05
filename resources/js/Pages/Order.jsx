@@ -2,31 +2,24 @@ import React from 'react'
 import AuthenticatedLayout from '../Layouts/AuthenticatedLayout'
 import { Link } from '@inertiajs/react'
 import { DatePicker, Nav } from 'rsuite'
+import { useRoute } from '../../../vendor/tightenco/ziggy'
 
-const products = [
-    { id: '#2024', subtotal: 3000, change: 200, payment: 'COD', status: 'Pending' },
-    { id: '#2221', subtotal: 3000, change: 200, payment: 'COD', status: 'Pending' },
-    { id: '#0298', subtotal: 3000, change: 200, payment: 'COD', status: 'Pending' },
-    { id: '#2902', subtotal: 3000, change: 200, payment: 'COD', status: 'Pending' },
-    { id: '#2223', subtotal: 3000, change: 200, payment: 'COD', status: 'Pending' },
-    { id: '#2223', subtotal: 3000, change: 200, payment: 'COD', status: 'Pending' },
-    { id: '#2223', subtotal: 3000, change: 200, payment: 'COD', status: 'Pending' },
-    { id: '#2223', subtotal: 3000, change: 200, payment: 'COD', status: 'Pending' },
-]
+function Order({ orders }) {
+    const route = useRoute();
+    // console.log(orders);
+    // console.log(route('customer.view_order', { order_id: orders[0].orderID }));
 
-
-function Order() {
     return (
         <div className="container h-100 py-4">
             <div className="d-flex justify-content-between align-items-start mb-3">
                 <div>
                     <h2 className='fw-semibold'>Order</h2>
-                    <p>28 orders found</p>
+                    <p>{orders.length} orders found</p>
                 </div>
 
                 <div className="d-flex">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                    <button class="btn btn-outline-success" type="submit">Search</button>
+                    <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+                    <button className="btn btn-outline-success" type="submit">Search</button>
                 </div>
             </div>
 
@@ -56,31 +49,39 @@ function Order() {
 
             <div className="card shadow">
                 <div className="card-body">
-                    <table class="table">
+                    <table className="table">
                         <thead className='text-center'>
                             <tr>
-                                <th>Order id</th>
+                                <th>Order ID</th>
+                                <th>Quantity</th>
                                 <th>Subtotal</th>
-                                <th>Change</th>
                                 <th>Payment</th>
+                                <th>Address</th>
+                                <th>Phone Number</th>
                                 <th>Status</th>
                                 <th>Action</th>
-
                             </tr>
                         </thead>
                         <tbody className='text-center'>
+                            {orders.map((order) => (
+                                <tr className='align-middle' key={order.orderID}>
 
-                            {products.map((product) => (
-                                <tr className='align-middle'>
-                                    <th key={product.id}>{product.id}</th>
-                                    <td>P{product.subtotal}</td>
-                                    <td>P{product.change}</td>
-                                    <td>{product.payment}</td>
-                                    <td>{product.status}</td>
+                                    <td>{order.orderID}</td>
+                                    <td>{order.quantity}</td>
+                                    <td>P{order.subtotal}</td>
+                                    <td>{order.payment_method}</td>
+                                    <td>{order.address}</td>
+                                    <td>{order.phone_number}</td>
+                                    <td>{order.order_status}</td>
                                     <td className='row justify-content-center align-items-center'>
                                         <div className="col-lg-5 col-md-5">
                                             <div className="d-grid">
-                                                <button className="btn btn-primary btn-sm fw-semibold">View</button>
+                                                <Link
+                                                    href={route('customer.view_order', { order_id: order.orderID })}
+                                                    type='button'
+                                                    className="btn btn-primary btn-sm fw-semibold">
+                                                    View
+                                                </Link>
                                             </div>
                                         </div>
                                         <div className="col-lg-5 col-md-5">
@@ -91,7 +92,6 @@ function Order() {
                                     </td>
                                 </tr>
                             ))}
-
                         </tbody>
                     </table>
                 </div>

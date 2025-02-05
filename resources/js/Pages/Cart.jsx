@@ -4,16 +4,19 @@ import { Link, useForm } from '@inertiajs/react';
 import { Pagination } from 'rsuite';
 import { useRoute } from '../../../vendor/tightenco/ziggy';
 
-function Cart({ carts }) {
+function Cart({ carts, total_amount }) {
 
-    // console.log(carts);
+    console.log(carts);
+
+    // Ensure total_amount is a number before calling toFixed
+    const parse_totalAmount = parseFloat(total_amount).toFixed(2);
 
     const [activePage, setActivePage] = React.useState(1);
 
     const route = useRoute();
 
     const { setData, post, processing } = useForm({
-        cart_id: carts.map((cart) => cart.id),
+        cart_id: carts.data.map((cart) => cart.id),
         payment_method: '',
         address: 'UM Matina Gravahan, Davao City',
     });
@@ -44,7 +47,7 @@ function Cart({ carts }) {
                     <div className="card border-0 shadow rounded">
                         <div className="card-header bg-primary text-light d-flex justify-content-between align-items-center">
                             <h4>Shopping Cart</h4>
-                            <h4>{carts.length} Items</h4>
+                            <h4>{carts.total} Items</h4>
                         </div>
 
                         <div className="card-body">
@@ -60,7 +63,7 @@ function Cart({ carts }) {
                                 <tbody className='text-center'>
 
                                     {
-                                        carts.map((cart) => (
+                                        carts.data.map((cart) => (
                                             // console.log('Cart ID:' + cart.id),
 
                                             <tr className='align-middle' key={cart.id}>
@@ -93,7 +96,32 @@ function Cart({ carts }) {
                             </table>
                         </div>
 
-                        <div className='card-footer border-0 bg-light d-flex justify-content-between align-items-center'>
+                        <div className="card-footer d-flex justify-content-end align-items-center">
+                            {
+                                carts.links.map((link) => (
+                                    link.url ?
+                                        <Link
+                                            key={link.label}
+                                            href={link.url}
+                                            dangerouslySetInnerHTML={{ __html: link.label }}
+                                            className={`btn btn-sm me-3 ${link.active ? 'btn-primary' : 'btn-outline-primary'}`}
+                                            style={{ textDecoration: 'none' }}
+                                            preserveScroll
+                                        />
+
+                                        :
+                                        <span
+                                            key={link.label}
+                                            dangerouslySetInnerHTML={{ __html: link.label }}
+                                            className='me-3 text-muted'
+                                        >
+
+                                        </span>
+                                ))
+                            }
+                        </div>
+
+                        {/* <div className='card-footer border-0 bg-light d-flex justify-content-between align-items-center'>
                             <p className="fw-semibold">
                                 10 out of 50
                             </p>
@@ -105,7 +133,7 @@ function Cart({ carts }) {
                                 activePage={activePage}
                                 onChangePage={setActivePage}
                             />
-                        </div>
+                        </div> */}
                     </div>
                 </div>
 
@@ -120,9 +148,9 @@ function Cart({ carts }) {
                                 </div>
 
                                 <div className="d-flex justify-content-between align-items-center fw-semibold">
-                                    <p>ITEMS {carts.length}</p>
+                                    <p>ITEMS {carts.total}</p>
                                     <p>
-                                        ₱ {carts.reduce((total, cart) => total + cart.quantity * cart.product.price, 0).toFixed(2)}
+                                        ₱ {parse_totalAmount}
                                     </p>
                                 </div>
 

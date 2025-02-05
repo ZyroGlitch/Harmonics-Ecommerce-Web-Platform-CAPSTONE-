@@ -173,4 +173,11 @@ class OrderController extends Controller
             }
         }
     }
+
+    public function view_order($order_id){
+        return dd($order_id);
+        // $data = Order::find($order_id);
+
+        // return inertia('ViewOrder');
+    }
 }

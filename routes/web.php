@@ -48,9 +48,14 @@ Route::middleware(['auth',CustomerMiddleware::class])->name('customer.')->group(
     Route::post('/addCart', [UserController::class, 'addCart'])
     ->name('addCart');
 
-    Route::post('cart/checkout',[OrderController::class, 'checkout'])->name('checkout');
+    Route::post('/cart/checkout',[OrderController::class, 'checkout'])->name('checkout');
 
-    Route::post('/cart/checkout/store',[OrderController::class,'store_checkout'])->name(('store_checkout'));
+    Route::post('/cart/checkout/store',[OrderController::class,'store_checkout'])->name('store_checkout');
+
+    Route::get('/order/view/{order_id}', [OrderController::class, 'view_order'])
+    ->where('order_id', '[A-Za-z0-9#]+')
+    ->name('view_order');
+
 });
 
 

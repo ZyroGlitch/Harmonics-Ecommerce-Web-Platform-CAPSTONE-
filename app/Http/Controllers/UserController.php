@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
+use App\Models\Order;
 use App\Models\User;
 use App\Models\Product;
 use Illuminate\Support\Str;
@@ -41,7 +42,10 @@ class UserController extends Controller
     }
 
     public function order(){
-        return inertia('Order');
+        $user = auth()->user();
+        $orders = Order::where('user_id',$user->id)->get();
+
+        return inertia('Order',['orders' => $orders]);
     }
 
     public function showProduct($productID){
@@ -71,11 +75,15 @@ class UserController extends Controller
             // Fetch all carts
             $user = auth()->user();
 
-            $carts = Cart::with('product')->where('user_id', $user->id)->get();
+            $carts = Cart::with('product')->where('user_id', $user->id)->latest()->paginate(3);
             // dd($carts);
 
+            $total_amount = Cart::with('product')->where('user_id', $user->id)->sum('subtotal');
+            // dd($total_amount);
+
             return inertia('Cart', [
-                'carts' => $carts
+                'carts' => $carts,
+                'total_amount' => $total_amount
             ]);
         }
     }
