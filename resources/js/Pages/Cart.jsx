@@ -1,7 +1,7 @@
 import React from 'react';
 import AuthenticatedLayout from '../Layouts/AuthenticatedLayout';
 import { Link, useForm } from '@inertiajs/react';
-import { Pagination } from 'rsuite';
+// import { Pagination } from 'rsuite';
 import { useRoute } from '../../../vendor/tightenco/ziggy';
 
 function Cart({ carts, total_amount }) {
@@ -11,7 +11,7 @@ function Cart({ carts, total_amount }) {
     // Ensure total_amount is a number before calling toFixed
     const parse_totalAmount = parseFloat(total_amount).toFixed(2);
 
-    const [activePage, setActivePage] = React.useState(1);
+    // const [activePage, setActivePage] = React.useState(1);
 
     const route = useRoute();
 
@@ -96,29 +96,33 @@ function Cart({ carts, total_amount }) {
                             </table>
                         </div>
 
-                        <div className="card-footer d-flex justify-content-end align-items-center">
-                            {
-                                carts.links.map((link) => (
-                                    link.url ?
-                                        <Link
-                                            key={link.label}
-                                            href={link.url}
-                                            dangerouslySetInnerHTML={{ __html: link.label }}
-                                            className={`btn btn-sm me-3 ${link.active ? 'btn-primary' : 'btn-outline-primary'}`}
-                                            style={{ textDecoration: 'none' }}
-                                            preserveScroll
-                                        />
+                        <div className="card-footer d-flex justify-content-between align-items-center">
+                            <p className='fw-semibold'>{carts.to} out of {carts.total} Items</p>
 
-                                        :
-                                        <span
-                                            key={link.label}
-                                            dangerouslySetInnerHTML={{ __html: link.label }}
-                                            className='me-3 text-muted'
-                                        >
+                            <div>
+                                {
+                                    carts.links.map((link) => (
+                                        link.url ?
+                                            <Link
+                                                key={link.label}
+                                                href={link.url}
+                                                dangerouslySetInnerHTML={{ __html: link.label }}
+                                                className={`btn btn-sm me-3 ${link.active ? 'btn-primary' : 'btn-outline-primary'}`}
+                                                style={{ textDecoration: 'none' }}
+                                                preserveScroll
+                                            />
 
-                                        </span>
-                                ))
-                            }
+                                            :
+                                            <span
+                                                key={link.label}
+                                                dangerouslySetInnerHTML={{ __html: link.label }}
+                                                className='me-3 text-muted'
+                                            >
+
+                                            </span>
+                                    ))
+                                }
+                            </div>
                         </div>
 
                         {/* <div className='card-footer border-0 bg-light d-flex justify-content-between align-items-center'>

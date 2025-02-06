@@ -73,22 +73,14 @@ function Order({ orders }) {
                                     <td>{order.address}</td>
                                     <td>{order.phone_number}</td>
                                     <td>{order.order_status}</td>
-                                    <td className='row justify-content-center align-items-center'>
-                                        <div className="col-lg-5 col-md-5">
-                                            <div className="d-grid">
-                                                <Link
-                                                    href={route('customer.view_order', { order_id: order.orderID })}
-                                                    type='button'
-                                                    className="btn btn-primary btn-sm fw-semibold">
-                                                    View
-                                                </Link>
-                                            </div>
-                                        </div>
-                                        <div className="col-lg-5 col-md-5">
-                                            <div className="d-grid">
-                                                <button className="btn btn-warning btn-sm fw-semibold">Edit</button>
-                                            </div>
-                                        </div>
+                                    <td className="d-grid">
+                                        <Link
+                                            href={route('customer.view_order', { order_id: order.orderID })}
+                                            type='button'
+                                            className="btn btn-primary btn-sm fw-semibold"
+                                            style={{ textDecoration: 'none' }}>
+                                            View
+                                        </Link>
                                     </td>
                                 </tr>
                             ))}

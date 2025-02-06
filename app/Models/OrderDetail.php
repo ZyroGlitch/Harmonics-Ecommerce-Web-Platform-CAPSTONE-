@@ -13,4 +13,13 @@ class OrderDetail extends Model
         'quantity',
         'subtotal'
     ];
+
+    // Include a model relationship
+    public function product(){
+        return $this->belongsTo((Product::class));
+    }
+
+    public function user(){
+        return $this->belongsTo((User::class));
+    }
 }

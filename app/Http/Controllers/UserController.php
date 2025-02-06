@@ -43,7 +43,7 @@ class UserController extends Controller
 
     public function order(){
         $user = auth()->user();
-        $orders = Order::where('user_id',$user->id)->get();
+        $orders = Order::where('user_id',$user->id)->latest()->get();
 
         return inertia('Order',['orders' => $orders]);
     }
@@ -53,6 +53,13 @@ class UserController extends Controller
 
         $product = Product::where('id', $productID)->first();
         return inertia('ShowProduct', ['show_product' => $product]);
+    }
+
+    public function profile(){
+        $user = auth()->user();
+        $data = User::find($user);
+
+        return inertia('Profile',['user_info' => $data]);
     }
 
     public function cart($cart_id = null){
@@ -75,7 +82,7 @@ class UserController extends Controller
             // Fetch all carts
             $user = auth()->user();
 
-            $carts = Cart::with('product')->where('user_id', $user->id)->latest()->paginate(3);
+            $carts = Cart::with('product')->where('user_id', $user->id)->latest()->paginate(5);
             // dd($carts);
 
             $total_amount = Cart::with('product')->where('user_id', $user->id)->sum('subtotal');
@@ -207,41 +214,61 @@ class UserController extends Controller
     }
 }
 
-    public function addCart(Request $request)
-{
-    $data = $request->validate([
-        'productID' => 'required|integer',
-        'price' => 'required|numeric',
-        'quantity' => 'required|integer',
-    ]);
-
-    $user = auth()->user();
-
-    // Check if the product exist already in the cart table
-    $checkIfProductExists = Cart::where('user_id', $user->id)
-    ->where('product_id',$request->productID)
-    ->first();
-
-
-    if($checkIfProductExists){
-        // Update the quantity and subtotal
-        $checkIfProductExists->quantity += $request->quantity;
-        $checkIfProductExists->subtotal += $request->price * $request->quantity;
-        $checkIfProductExists->save();
-
-        return redirect()->back()->with('success', 'Product added to cart!');
-    }else{
-        $store = Cart::create([
-                'product_id' => $data['productID'],
-                'user_id' => $user->id,
-                'quantity' => $data['quantity'],
-                'subtotal' => $data['price'] * $data['quantity'],
+    public function addCart(Request $request){
+        $data = $request->validate([
+            'productID' => 'required|integer',
+            'price' => 'required|numeric',
+            'quantity' => 'required|integer',
         ]);
 
-        $store ? redirect()->back()->with('success', 'Product added to cart!') 
-        : redirect()->back()->with('error', 'Failed to add product to cart!');
-    }  
-}
+        $user = auth()->user();
 
+        // Check if the product exist already in the cart table
+        $checkIfProductExists = Cart::where('user_id', $user->id)
+        ->where('product_id',$request->productID)
+        ->first();
+
+
+        if($checkIfProductExists){
+            // Update the quantity and subtotal
+            $checkIfProductExists->quantity += $request->quantity;
+            $checkIfProductExists->subtotal += $request->price * $request->quantity;
+            $checkIfProductExists->save();
+
+            return redirect()->back()->with('success', 'Product added to cart!');
+        }else{
+            $store = Cart::create([
+                    'product_id' => $data['productID'],
+                    'user_id' => $user->id,
+                    'quantity' => $data['quantity'],
+                    'subtotal' => $data['price'] * $data['quantity'],
+            ]);
+
+            $store ? redirect()->back()->with('success', 'Product added to cart!') 
+            : redirect()->back()->with('error', 'Failed to add product to cart!');
+        }  
+    }
+
+    public function profile_update(Request $request){
+        $request->validate([
+            'firstname' => 'required',
+            'lastname' => 'required',
+            'phone' => 'required',
+            'email' => 'required|email',
+            'address' => 'required'
+        ]);
+
+        $user = auth()->user();
+        $data = User::find($user->id)->first();
+
+        $data->firstname = $request->firstname;
+        $data->lastname = $request->lastname;
+        $data->phone = $request->phone;
+        $data->address = $request->address;
+        $data->email = $request->email;
+        $data->save();
+
+        return redirect()->back()->with('success','Profile update successfully.');
+    }
 
 }

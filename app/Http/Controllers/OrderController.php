@@ -25,7 +25,7 @@ class OrderController extends Controller
             $user = User::find($auth_user->id); 
 
             // Generate a string value of order ID
-            $generated_id = '#' . strtoupper(Str::random(7));
+            $generated_id = strtoupper(Str::random(7));
 
             Order::create([
                     'orderID' => $generated_id,
@@ -117,7 +117,7 @@ class OrderController extends Controller
             $user = User::find($auth_user->id);
 
             // Generate a string value of order ID
-            $generated_id = '#' . strtoupper(Str::random(7));
+            $generated_id = strtoupper(Str::random(7));
 
             Order::create([
                     'orderID' => $generated_id,
@@ -175,9 +175,12 @@ class OrderController extends Controller
     }
 
     public function view_order($order_id){
-        return dd($order_id);
-        // $data = Order::find($order_id);
+        // dd($order_id);
+        $data = OrderDetail::with('product')->where('order_id',$order_id)->latest()->paginate(5);
 
-        // return inertia('ViewOrder');
+        // dd($data);
+
+        return inertia('ViewOrders',['view_orders' => $data]);
     }
+
 }

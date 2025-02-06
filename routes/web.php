@@ -56,6 +56,9 @@ Route::middleware(['auth',CustomerMiddleware::class])->name('customer.')->group(
     ->where('order_id', '[A-Za-z0-9#]+')
     ->name('view_order');
 
+    Route::get('/profile',[UserController::class,'profile'])->name('profile');
+
+    Route::post('/profile/update',[UserController::class,'profile_update'])->name('profile_update');
 });
 
 
